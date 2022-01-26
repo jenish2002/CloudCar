@@ -1,3 +1,4 @@
+import 'package:car_app/screens/registration_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -104,9 +105,32 @@ class _LoginScreenState extends State<LoginScreen> {
                     emailField,
                     const SizedBox(height: 25),
                     passwordField,
-                    const SizedBox(height: 30),
+                    const SizedBox(height: 35),
                     loginButton,
-                    const SizedBox(height: 45),
+                    const SizedBox(height: 15),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        const Text("Don't have an account? "),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const RegistrationScreen()
+                                )
+                            );
+                          },
+                          child: const Text("SignUp",
+                            style: TextStyle(
+                              color: Colors.redAccent,
+                              fontWeight: FontWeight.w700,
+                              fontSize: 15
+                            ),
+                          ),
+                        )
+                      ],
+                    )
                   ],
                 ),
               ),
