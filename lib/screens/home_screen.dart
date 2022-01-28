@@ -14,6 +14,11 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         title: const Text("Welcome"),
       ),
+      body: const Center(
+        child: Padding(
+          padding: EdgeInsets.all(20),
+        ),
+      ),
     );
   }
 }
