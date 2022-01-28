@@ -1,6 +1,11 @@
+
+
 import 'package:car_app/screens/registration_screen.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:car_app/screens/home_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -18,6 +23,9 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
+  final _auth = FirebaseAuth.instance;
+
+
   @override
   Widget build(BuildContext context) {
 
@@ -26,7 +34,13 @@ class _LoginScreenState extends State<LoginScreen> {
       autofocus: false,
       controller: emailController,
       keyboardType: TextInputType.emailAddress,
-      //validator: () {},
+        validator: (value)
+        {
+          if(value!.isEmpty){
+            return("please Enter Yourv Email");
+
+          }
+        },
       //to save value user enters
       onSaved: (value)
       {
@@ -50,7 +64,11 @@ class _LoginScreenState extends State<LoginScreen> {
       controller: passwordController,
       //Doesn't show password when user enters
       obscureText: true,
-      //validator: () {},
+      validator: (value){
+    if(value!.isEmpty){
+    return("Password Is Required for Login");
+    }
+    },
       //to save value user enters
       onSaved: (value)
       {
@@ -76,7 +94,8 @@ class _LoginScreenState extends State<LoginScreen> {
       child: MaterialButton(
         padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
         minWidth: MediaQuery.of(context).size.width,
-        onPressed: () {},
+        onPressed: () { signIn(emailController.text,passwordController.text);
+        },
         child: const Text("Login", textAlign: TextAlign.center,
           style: TextStyle(
             fontSize: 20,
@@ -139,5 +158,22 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       ),
     );
+  }
+  //login function
+  void signIn(String email, String password) async
+  {
+    if(_formKey.currentState!.validate())
+    {
+      await _auth.signInWithEmailAndPassword(email: email, password: password)
+          .then((uid) => {
+            Fluttertoast.showToast(msg: "Login Successful"),
+            Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => HomeScreen())),
+                          }).catchError((e)
+      {
+        Fluttertoast.showToast(msg: e!.message);
+
+      });
+
+     }
   }
 }
