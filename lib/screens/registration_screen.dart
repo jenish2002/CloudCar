@@ -5,7 +5,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:car_app/screens/home_screen.dart';
 
-
 class RegistrationScreen extends StatefulWidget {
   const RegistrationScreen({Key? key}) : super(key: key);
 
@@ -14,7 +13,6 @@ class RegistrationScreen extends StatefulWidget {
 }
 
 class _RegistrationScreenState extends State<RegistrationScreen> {
-
 
   final _auth = FirebaseAuth.instance;
   //form key
@@ -148,8 +146,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
             return "Password don't match";
           }
           return null;
-
-
         },
         //to save value user enters
         onSaved: (value)
@@ -240,7 +236,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       await _auth.createUserWithEmailAndPassword(email: email, password: password)
           .then((uid) => {
             postDetailsToFirestore()
-
       }).catchError((e)
       {
        Fluttertoast.showToast(msg: e!.message);
@@ -248,13 +243,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     }
   }
 
-
-  postDetailsToFirestore() async
-  {
+  postDetailsToFirestore() async {
     //calling our firestore
     //calling our user model
     //sending these values
-
 
     FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
     User? user = _auth.currentUser;
@@ -267,23 +259,14 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     userModel.firstName = firstNameEditingController.text;
     userModel.secondName = secondNameEditingController.text;
 
-
     await firebaseFirestore
       .collection("users")
       .doc(user.uid)
       .set(userModel.toMap());
-    Fluttertoast.showToast(msg: "Account created successfully :) ");
+    Fluttertoast.showToast(msg: "Account created successfully");
 
-    Navigator.pushAndRemoveUntil((context), MaterialPageRoute(builder: (context) => HomeScreen()),
+    Navigator.pushAndRemoveUntil((context), MaterialPageRoute(builder: (context) => const HomeScreen()),
         (route) => false);
-
-
-
-
-
-
-
-
   }
 }
 
