@@ -34,6 +34,11 @@ class _LoginScreenState extends State<LoginScreen> {
         if(value!.isEmpty) {
           return("Please Enter Email");
         }
+        //reg expression for email
+        if(!RegExp("^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+.[a-z]").hasMatch(value)) {
+          return("Please Enter valid Email");
+        }
+        return null;
       },
       //to save value user enters
       onSaved: (value)
@@ -62,6 +67,11 @@ class _LoginScreenState extends State<LoginScreen> {
         if(value!.isEmpty) {
           return("Password is Required to Login");
         }
+        //reg expression for password
+        if(!RegExp(r'^.{6,}$').hasMatch(value)) {
+          return("Minimum Password length is 6 characters.");
+        }
+        return null;
       },
       //to save value user enters
       onSaved: (value)
@@ -158,13 +168,24 @@ class _LoginScreenState extends State<LoginScreen> {
   //login function
   void logIn(String email, String password) async {
     if(_formKey.currentState!.validate()) {
-      await _auth.signInWithEmailAndPassword(email: email, password: password)
-          .then((uid) => {
-        Fluttertoast.showToast(msg: "Login Successful"),
-        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const HomeScreen())),
-      }).catchError((e) {
-        Fluttertoast.showToast(msg: e!.message);
-      });
+      try {
+        await _auth.signInWithEmailAndPassword(email: email, password: password)
+            .then((uid) => {
+          Fluttertoast.showToast(msg: "Login successful"),
+          Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (context) => const HomeScreen())),
+        });
+      } on FirebaseAuthException catch(ex) {
+        if(ex.code == 'wrong-password' || ex.code == 'user-not-found') {
+          Fluttertoast.showToast(msg: "Invalid credentials");
+        }
+        else if(ex.code == 'network-request-failed') {
+          Fluttertoast.showToast(msg: "Check internet connection");
+        }
+        else {
+          Fluttertoast.showToast(msg: ex.code.toString());
+        }
+      }
     }
   }
 }

@@ -35,7 +35,11 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         keyboardType: TextInputType.name,
         validator: (value) {
           if(value!.isEmpty) {
-            return("First Name Can't Be Empty");
+            return("First Name cannot be Empty");
+          }
+          //reg expression for firstname
+          if(!RegExp(r'^.{3,}$').hasMatch(value)) {
+            return("Minimum First Name length is 3 characters.");
           }
           return null;
         },
@@ -62,7 +66,11 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         keyboardType: TextInputType.name,
         validator: (value) {
           if(value!.isEmpty) {
-            return("Second Name Can't Be Empty");
+            return("Second Name cannot be Empty");
+          }
+          //reg expression for secondname
+          if(!RegExp(r'^.{3,}$').hasMatch(value)) {
+            return("Minimum Second Name length is 3 characters.");
           }
           return null;
         },
@@ -91,6 +99,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           if(value!.isEmpty) {
             return("Please Enter Email");
           }
+          //reg expression for email
+          if(!RegExp("^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+.[a-z]").hasMatch(value)) {
+            return("Please Enter valid Email");
+          }
           return null;
         },
         //to save value user enters
@@ -118,6 +130,11 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           if(value!.isEmpty) {
             return("Password is Required to Login");
           }
+          //reg expression for password
+          if(!RegExp(r'^.{6,}$').hasMatch(value)) {
+            return("Minimum Password length is 6 characters.");
+          }
+          return null;
         },
         //to save value user enters
         onSaved: (value)
@@ -141,8 +158,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         controller: confirmPasswordEditingController,
         obscureText: true,
         validator: (value) {
-          if (confirmPasswordEditingController.text !=
-              passwordEditingController.text) {
+          if(value != passwordEditingController.text) {
             return "Password don't match";
           }
           return null;
@@ -233,13 +249,22 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
 
   void signUp(String email, String password) async {
     if(_formKey.currentState!.validate()) {
-      await _auth.createUserWithEmailAndPassword(email: email, password: password)
-          .then((uid) => {
-            postDetailsToFirestore()
-      }).catchError((e)
-      {
-       Fluttertoast.showToast(msg: e!.message);
-      });
+      try {
+        await _auth.createUserWithEmailAndPassword(email: email, password: password)
+            .then((uid) => {
+          postDetailsToFirestore()
+        });
+      } on FirebaseAuthException catch(ex) {
+        if(ex.code == 'email-already-in-use') {
+          Fluttertoast.showToast(msg: "User already registered");
+        }
+        else if(ex.code == 'network-request-failed') {
+          Fluttertoast.showToast(msg: "Check internet connection");
+        }
+        else {
+          Fluttertoast.showToast(msg: ex.code.toString());
+        }
+      }
     }
   }
 
