@@ -76,50 +76,48 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: Colors.white,
       ),
       drawer: Drawer(
+        backgroundColor: Colors.white,
         child: ListView(
           children: <Widget>[
-            Container(
-              color: Colors.white,
-              child: Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Form(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      const SizedBox(height: 60),
-                      GestureDetector(
-                        child: const CircleAvatar(
-                          backgroundColor: Colors.grey,
-                          radius: 30,
-                          child: Icon(Icons.person, color: Colors.white, size: 35),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 30, 20, 20), //.all(20.0),
+              child: Form(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    GestureDetector(
+                      child: const CircleAvatar(
+                        backgroundColor: Colors.grey,
+                        radius: 30,
+                        child: Icon(Icons.person, color: Colors.white, size: 35),
+                      ),
+                    ),
+                    const SizedBox(width: 20),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text("${loggedInUser.firstName} ${loggedInUser.secondName}",
+                          style: const TextStyle(
+                            fontSize: 20.0,
+                            fontWeight: FontWeight.bold,
+                          )
                         ),
-                      ),
-                      const SizedBox(width: 20),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text("${loggedInUser.firstName} ${loggedInUser.secondName}",
+                        const SizedBox(height: 5),
+                        Text("${loggedInUser.email}",
                             style: const TextStyle(
-                              fontSize: 18.0,
-                              fontWeight: FontWeight.bold,
+                              fontSize: 16.0,
+                              fontWeight: FontWeight.w400,
                             )
-                          ),
-                          const SizedBox(height: 5),
-                          Text("${loggedInUser.email}",
-                              style: const TextStyle(
-                                fontSize: 16.0,
-                                fontWeight: FontWeight.w400,
-                              )
-                          ),
-                        ],
-                      ),
-                    ],
-                  )
+                        ),
+                      ],
+                    ),
+                  ],
                 )
-              ),
+              )
             ),
+            const Divider(thickness: 1, indent: 10, endIndent: 10, color: Colors.black38),
             InkWell(
               onTap: (){},
               child: const ListTile(
@@ -204,6 +202,20 @@ class _HomeScreenState extends State<HomeScreen> {
                 leading: Icon(Icons.help),
               )
             ),
+            InkWell(
+                onTap: () {
+                  logout(context);
+                },
+                child: const ListTile(
+                  title: Text('Log Out',
+                      style: TextStyle(
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.w500,
+                      )
+                  ),
+                  leading: Icon(Icons.logout_rounded),
+                )
+            ),
           ],
         ),
       ),
@@ -217,12 +229,6 @@ class _HomeScreenState extends State<HomeScreen> {
               const SizedBox(height: 5),
               searchField,
               const SizedBox(height: 20),
-              ActionChip(
-                  label: const Text("Logout"),
-                  onPressed: () {
-                    logout(context);
-                  }
-              ),
             ],
           ),
         ),
