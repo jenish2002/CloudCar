@@ -9,10 +9,10 @@ class UserModel {
   //receive data from server
   factory UserModel.fromMap(map) {
     return UserModel(
-        uid: map['uid'],
-        email: map['email'],
-        firstName: map['firstName'],
-    secondName: map['secondName'],
+      uid: map['uid'],
+      email: map['email'],
+      firstName: map['firstName'],
+      secondName: map['secondName'],
     );
   }
 

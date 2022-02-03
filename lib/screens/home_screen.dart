@@ -1,4 +1,5 @@
 import 'package:car_app/model/user_model.dart';
+import 'package:car_app/screens/search_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -34,27 +35,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-
-    //search field
-    final searchField = TextFormField(
-      enabled: false,
-      decoration: InputDecoration(
-        hintText: "Search Car",
-        fillColor: Colors.black12,
-        filled: true,
-        suffixIcon: const Icon(Icons.search_rounded),
-        contentPadding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(30),
-        )
-      ),
-    );
-
     return Scaffold(
       key: _scaffoldKey,
       backgroundColor: Colors.white,
       appBar: AppBar(
         elevation: 0,
+        backgroundColor: Colors.white,
         title: const Text(
           "Cloud Car",
           style: TextStyle(
@@ -73,14 +59,13 @@ class _HomeScreenState extends State<HomeScreen> {
           statusBarBrightness: Brightness.light, // For iOS (dark icons)
         ),
         iconTheme: const IconThemeData(color: Colors.black),
-        backgroundColor: Colors.white,
       ),
       drawer: Drawer(
         backgroundColor: Colors.white,
         child: ListView(
           children: <Widget>[
             Padding(
-              padding: const EdgeInsets.fromLTRB(20, 30, 20, 20), //.all(20.0),
+              padding: const EdgeInsets.fromLTRB(20, 30, 20, 20),
               child: Form(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -227,7 +212,29 @@ class _HomeScreenState extends State<HomeScreen> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               const SizedBox(height: 5),
-              searchField,
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const SearchScreen()
+                      )
+                  );
+                },
+                child: TextFormField(
+                  enabled: false,
+                  decoration: InputDecoration(
+                    hintText: "Search Car",
+                    fillColor: Colors.black12,
+                    filled: true,
+                    suffixIcon: const Icon(Icons.search_rounded),
+                    contentPadding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    )
+                  ),
+                ),
+              ),
               const SizedBox(height: 20),
             ],
           ),
