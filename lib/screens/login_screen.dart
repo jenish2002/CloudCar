@@ -81,7 +81,7 @@ class _LoginScreenState extends State<LoginScreen> {
       //when user enter email there will be button in keyboard to done
       textInputAction: TextInputAction.done,
         decoration: InputDecoration(
-          prefixIcon: const Icon(Icons.vpn_key),
+          prefixIcon: const Icon(Icons.lock),
           contentPadding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
           hintText: "Password",
           border: OutlineInputBorder(
