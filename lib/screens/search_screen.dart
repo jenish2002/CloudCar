@@ -1,6 +1,10 @@
 import 'package:car_app/model/search_car.dart';
+import 'package:car_app/screens/view_car_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+
+
+late String str;
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({Key? key}) : super(key: key);
@@ -27,7 +31,7 @@ class _SearchScreenState extends State<SearchScreen> {
 
     if (queryResultSet.isEmpty && value.length == 1) {
       SearchCar().searchByName(value).then((QuerySnapshot docs) {
-        for (int i = 0; i < docs.docs.length; ++i) {
+        for (int i = 0; i < docs.docs.length; i++) {
           queryResultSet.add(docs.docs[i].data());
           setState(() {
             tempSearchStore.add(docs.docs[i].data());
@@ -38,7 +42,7 @@ class _SearchScreenState extends State<SearchScreen> {
     else {
       tempSearchStore = [];
       for (var element in queryResultSet) {
-        if (element['Name'].startsWith(capitalizedValue)) {
+        if (element['name'].startsWith(capitalizedValue)) {
           setState(() {
             tempSearchStore.add(element);
           });
@@ -46,20 +50,6 @@ class _SearchScreenState extends State<SearchScreen> {
       }
     }
   }
-
-  /*late AnimationController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(vsync: this);
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }*/
 
   @override
   Widget build(BuildContext context) {
@@ -102,7 +92,7 @@ class _SearchScreenState extends State<SearchScreen> {
             primary: false,
             shrinkWrap: true,
             children: tempSearchStore.map((element) {
-              return buildResultCard(element);
+              return buildResultCard(element,context);
             }).toList()
           ),
         ],
@@ -110,18 +100,29 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 }
-Widget buildResultCard(data) {
+Widget buildResultCard(data,context) {
   return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
       elevation: 2.0,
       child: Center(
-          child: Text(data['Name'],
+        child: GestureDetector(
+          onTap: () {
+            str = data['name'];
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => ViewCar(str)
+              )
+            );
+          },
+          child: Text(data['name'],
             textAlign: TextAlign.center,
             style: const TextStyle(
               color: Colors.black,
               fontSize: 20.0,
             ),
-          )
+          ),
+        )
       )
   );
 }
