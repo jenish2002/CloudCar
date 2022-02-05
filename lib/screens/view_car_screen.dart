@@ -13,17 +13,24 @@ class ViewCar extends StatefulWidget {
 
 class _ViewCarState extends State<ViewCar> {
 
-  String? image;
-  String? carName;
-  String? price;
+  late AnimationController controller;
+  String image="";
+  String carName="";
+  String price="";
+  var isLoading = true;
 
   void initialState() {
+    setState(() {
+      isLoading = true;
+    });
     SearchCar().searchByName(widget.value).then((QuerySnapshot docs) {
       image = docs.docs[0].get("image").toString();
       carName = docs.docs[0].get("brand").toString() + " " +
                 docs.docs[0].get("name").toString();
       price = docs.docs[0].get("price").toString();
-      setState(() {});
+      setState(() {
+        isLoading = false;
+      });
     });
   }
 
@@ -52,13 +59,17 @@ class _ViewCarState extends State<ViewCar> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
+            !isLoading ? const CircularProgressIndicator() :
             Image.network(
-              image!,
+              image,
+              errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+                return const CircularProgressIndicator();
+              },
               fit: BoxFit.cover,
             ),
             const SizedBox(height: 20),
             Text(
-              carName!,
+              carName,
               style: const TextStyle(
                 color: Colors.black,
                 fontWeight: FontWeight.w600,
