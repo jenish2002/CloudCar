@@ -14,15 +14,16 @@ class ViewCar extends StatefulWidget {
 class _ViewCarState extends State<ViewCar> {
 
   String? image;
-  String carName="Maruti Suzuki Swift";
-  String price="6.62L";
+  String? carName;
+  String? price;
 
   void initialState() {
     SearchCar().searchByName(widget.value).then((QuerySnapshot docs) {
       image = docs.docs[0].get("image").toString();
-      setState(() {
-
-      });
+      carName = docs.docs[0].get("brand").toString() + " " +
+                docs.docs[0].get("name").toString();
+      price = docs.docs[0].get("price").toString();
+      setState(() {});
     });
   }
 
@@ -57,7 +58,7 @@ class _ViewCarState extends State<ViewCar> {
             ),
             const SizedBox(height: 20),
             Text(
-              carName,
+              carName!,
               style: const TextStyle(
                 color: Colors.black,
                 fontWeight: FontWeight.w600,
