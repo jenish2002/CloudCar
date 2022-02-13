@@ -30,7 +30,11 @@ class _SearchScreenState extends State<SearchScreen> {
         value.substring(0, 1).toUpperCase() + value.substring(1);
 
     if (queryResultSet.isEmpty && value.length == 1) {
-      SearchCar().searchByName(value).then((QuerySnapshot docs) {
+      FirebaseFirestore.instance
+          .collection('cars')
+          .where('searchKey',
+          isEqualTo: value.substring(0, 1).toUpperCase())
+          .get().then((QuerySnapshot docs) {
         for (int i = 0; i < docs.docs.length; i++) {
           queryResultSet.add(docs.docs[i].data());
           setState(() {
@@ -83,7 +87,7 @@ class _SearchScreenState extends State<SearchScreen> {
             child: searchField,
           ),
           const SizedBox(height: 10),
-          GridView.count(
+            GridView.count(
             restorationId: "new",
             padding: const EdgeInsets.only(left: 10.0, right: 10.0),
             crossAxisCount: 2,
@@ -108,14 +112,15 @@ Widget buildResultCard(data,context) {
         child: GestureDetector(
           onTap: () {
             str = data['name'];
+            String carId = data['carId'];
             Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => ViewCar(str)
+                  builder: (context) => ViewCar(carId)
               )
             );
           },
-          child: Text(data['name'],
+          child: Text(data['name'] + " " + data['variant'],
             textAlign: TextAlign.center,
             style: const TextStyle(
               color: Colors.black,

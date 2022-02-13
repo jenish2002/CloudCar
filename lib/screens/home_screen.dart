@@ -1,3 +1,4 @@
+import 'package:car_app/model/car_model.dart';
 import 'package:car_app/model/user_model.dart';
 import 'package:car_app/screens/search_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -19,18 +20,46 @@ class _HomeScreenState extends State<HomeScreen> {
 
   User? user = FirebaseAuth.instance.currentUser;
   UserModel loggedInUser = UserModel();
+  List<CarModel> cars = [];
+  bool isLoading = false;
 
-  @override
-  void initState() {
-    super.initState();
-    FirebaseFirestore.instance
+  fetchUserAndCar() async {
+
+    setState(() {
+      isLoading = true;
+    });
+    await FirebaseFirestore.instance
         .collection("users")
         .doc(user!.uid)
         .get()
         .then((value){
-      loggedInUser = UserModel.fromMap(value.data());
-      setState(() {});
+      loggedInUser = UserModel.fromJson(value.data()!);
     });
+
+    await FirebaseFirestore.instance.collection("cars").get().then((val) {
+      for(int i = 0; i < val.docs.length; i++) {
+        cars.add(CarModel.fromJson(val.docs[i].data()));
+      }
+
+
+      for(int i = 0; i < val.docs.length; i++) {
+        print(("Car ${i+1}"));
+        print(cars[i].brand);
+        print(cars[i].name);
+        print(cars[i].image);
+      }
+
+    });
+
+    setState(() {
+      isLoading = false;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    fetchUserAndCar();
   }
 
   @override
@@ -204,7 +233,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
-      body: Center(
+      body: isLoading ? Center(child: CircularProgressIndicator()) : Center(
         child: Padding(
           padding: const EdgeInsets.all(20),
           child: Column(
@@ -231,16 +260,25 @@ class _HomeScreenState extends State<HomeScreen> {
                     contentPadding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(30),
-                    )
+                    ),
+
                   ),
+                  onChanged: (val){
+
+                  },
                 ),
               ),
               const SizedBox(height: 20),
+
             ],
           ),
         ),
       ),
     );
+  }
+
+  searchCar(String query) {
+
   }
 
   //logout function

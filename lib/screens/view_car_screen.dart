@@ -17,17 +17,25 @@ class _ViewCarState extends State<ViewCar> {
   String image="";
   String carName="";
   String price="";
+
+
   var isLoading = true;
 
   void initialState() {
     setState(() {
       isLoading = true;
     });
-    SearchCar().searchByName(widget.value).then((QuerySnapshot docs) {
+    FirebaseFirestore.instance.collection("cars").where("carId", isEqualTo: widget.value).get().then((QuerySnapshot docs) {
       image = docs.docs[0].get("image").toString();
       carName = docs.docs[0].get("brand").toString() + " " +
                 docs.docs[0].get("name").toString();
       price = docs.docs[0].get("price").toString();
+
+
+
+
+
+
       setState(() {
         isLoading = false;
       });
@@ -79,7 +87,7 @@ class _ViewCarState extends State<ViewCar> {
             const SizedBox(height: 20),
             Text(
               //price with inr symbol
-              '\u{20B9} $price',
+              'Price: \u{20B9} $price',
               style: const TextStyle(
                 color: Colors.black,
                 fontWeight: FontWeight.w600,

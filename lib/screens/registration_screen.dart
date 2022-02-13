@@ -287,7 +287,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     await firebaseFirestore
       .collection("users")
       .doc(user.uid)
-      .set(userModel.toMap());
+      .set(userModel.toJson());
     Fluttertoast.showToast(msg: "Account created successfully");
 
     Navigator.pushAndRemoveUntil((context), MaterialPageRoute(builder: (context) => const HomeScreen()),
