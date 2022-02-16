@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:car_app/model/car_model.dart';
 import 'package:car_app/model/user_model.dart';
 import 'package:car_app/screens/search_screen.dart';
@@ -18,10 +20,15 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
 
+
+
+
   User? user = FirebaseAuth.instance.currentUser;
   UserModel loggedInUser = UserModel();
   List<CarModel> cars = [];
   bool isLoading = false;
+
+
 
   fetchUserAndCar() async {
 
@@ -35,6 +42,10 @@ class _HomeScreenState extends State<HomeScreen> {
         .then((value){
       loggedInUser = UserModel.fromJson(value.data()!);
     });
+
+
+
+
 
     await FirebaseFirestore.instance.collection("cars").get().then((val) {
       for(int i = 0; i < val.docs.length; i++) {

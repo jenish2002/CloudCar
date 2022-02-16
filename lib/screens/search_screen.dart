@@ -86,7 +86,7 @@ class _SearchScreenState extends State<SearchScreen> {
             padding: const EdgeInsets.fromLTRB(5, 10, 15, 10),
             child: searchField,
           ),
-          const SizedBox(height: 10),
+           const SizedBox(height: 10),
             GridView.count(
             restorationId: "new",
             padding: const EdgeInsets.only(left: 10.0, right: 10.0),

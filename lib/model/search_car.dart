@@ -6,7 +6,7 @@ class SearchCar {
     return FirebaseFirestore.instance
         .collection('cars')
         .where('searchKey',
-          isEqualTo: searchValue.substring(0, 1).toUpperCase()
+          isEqualTo: searchValue.substring(0,1).toUpperCase()
         )
         .get().then((val){
           print(val.docs.length);
