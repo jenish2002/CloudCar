@@ -1,4 +1,3 @@
-import 'package:car_app/model/search_car.dart';
 import 'package:car_app/screens/view_car_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -116,9 +115,10 @@ Widget buildResultCard(data,context) {
             Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => ViewCar(carId)
+                builder: (context) => ViewCar(carId),
               )
             );
+            FocusScope.of(context).unfocus();
           },
           child: Text(data['name'] + " " + data['variant'],
             textAlign: TextAlign.center,
