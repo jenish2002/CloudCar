@@ -37,18 +37,7 @@ class _HomeScreenState extends State<HomeScreen> {
       loggedInUser = UserModel.fromJson(value.data()!);
     });
 
-    await FirebaseFirestore.instance.collection("cars").get().then((val) {
-      for(int i = 0; i < val.docs.length; i++) {
-        cars.add(CarModel.fromJson(val.docs[i].data()));
-      }
 
-      for(int i = 0; i < val.docs.length; i++) {
-        print(("Car ${i+1}"));
-        print(cars[i].brand);
-        print(cars[i].name);
-        print(cars[i].image);
-      }
-    });
 
     setState(() {
       isLoading = false;

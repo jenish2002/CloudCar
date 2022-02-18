@@ -1,3 +1,4 @@
+import 'package:car_app/model/car_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +23,7 @@ class _ViewCarState extends State<ViewCar> {
   String image="";
   String carName="";
   String price="";
+
   ScrollController scrollController = ScrollController();
   var isLoading = true;
   late double _height;
@@ -32,15 +34,25 @@ class _ViewCarState extends State<ViewCar> {
   Flag attributes = Flag.invisible;
   Flag brakesTyres = Flag.invisible;
 
+  CarModel carModel = new CarModel() ;
+
   void initialState() {
     setState(() {
       isLoading = true;
     });
-    FirebaseFirestore.instance.collection("cars").where("carId", isEqualTo: widget.value).get().then((QuerySnapshot docs) {
-      image = docs.docs[0].get("image").toString();
-      carName = docs.docs[0].get("brand").toString() + " " +
-                docs.docs[0].get("name").toString();
-      price = docs.docs[0].get("price").toString();
+
+
+    FirebaseFirestore.instance.collection("cars").where("carId", isEqualTo: widget.value).get().then((val) {
+      // image = docs.docs[0].get("image").toString();
+      // carName = docs.docs[0].get("brand").toString() + " " +
+      //           docs.docs[0].get("name").toString();
+      // price = docs.docs[0].get("price").toString();
+      //
+      // carModel = CarModel.fromJson(docs.docs[0].data()!)
+
+      carModel = CarModel.fromJson(val.docs[0].data());
+
+
       setState(() {
         isLoading = false;
       });
@@ -48,10 +60,17 @@ class _ViewCarState extends State<ViewCar> {
   }
 
   @override
+  void initState() {
+    // TODO: implement initState
+    initialState();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     _height = MediaQuery.of(context).size.height;
 
-    initialState();
+
     return WillPopScope(
       onWillPop: () async {
         Navigator.of(context).pop();
@@ -92,7 +111,7 @@ class _ViewCarState extends State<ViewCar> {
                         height: 200,
                         child: //!isLoading ? const CircularProgressIndicator() :
                         Image.network(
-                          image,
+                          carModel.image!,
                           errorBuilder:(BuildContext context, Object exception,
                               StackTrace? stackTrace) {
                             return const CircularProgressIndicator();
@@ -106,7 +125,7 @@ class _ViewCarState extends State<ViewCar> {
               ),
             ];
           },
-          body: SingleChildScrollView(
+          body: isLoading ? Center(child: CircularProgressIndicator()) : SingleChildScrollView(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -118,7 +137,7 @@ class _ViewCarState extends State<ViewCar> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                        carName,
+                        carModel.brand! + " " + carModel.name! + " " + carModel.variant!,
                         style: const TextStyle(
                           color: Colors.black,
                           fontWeight: FontWeight.w600,
@@ -247,30 +266,32 @@ class _ViewCarState extends State<ViewCar> {
                           });
                         },
                         child: ReturnText(title: "Engine Terminologies",
-                            textType: "small",iconChange: safety),
+                            textType: "small",iconChange: engineTerminologies),
                       ),
                       (engineTerminologies == Flag.visible) ?
                       Visibility(
                         child: Column(
                           children: <Widget>[
-                            ReturnText(title: "Engine", textType: "",
-                                iconChange: engineTerminologies),
+                             ReturnText(title: "Engine", textType: "",
+
+                                 iconChange: engineTerminologies),
                             ReturnText(title: "Emission Standard", textType: "",
-                                iconChange: engineTerminologies),
+                                 iconChange: engineTerminologies),
                             ReturnText(title: "Mileage", textType: "",
-                                iconChange: engineTerminologies),
-                            ReturnText(title: "Max Torque", textType: "",
-                                iconChange: engineTerminologies),
+                                 iconChange: engineTerminologies),
+                             ReturnText(title: "Max Torque", textType: "",
+                                 iconChange: engineTerminologies),
                             ReturnText(title: "Max Power", textType: "",
+                                 iconChange: engineTerminologies),
+                             ReturnText(title: "Transmission", textType: "",
+                                 iconChange: engineTerminologies),
+                             ReturnText(title: "Gears", textType: "",
+                                 iconChange: engineTerminologies),
+                             ReturnText(title: "Drivetrain", textType: "",
                                 iconChange: engineTerminologies),
-                            ReturnText(title: "Transmission", textType: "",
-                                iconChange: engineTerminologies),
-                            ReturnText(title: "Gears", textType: "",
-                                iconChange: engineTerminologies),
-                            ReturnText(title: "Drivetrain", textType: "",
-                                iconChange: engineTerminologies),
-                            ReturnText(title: "Cylinders", textType: "",
-                                iconChange: engineTerminologies),
+                             ReturnText(title: "Cylinders", textType: "",
+                                 iconChange: engineTerminologies),
+
                           ],
                         ),
                       ) :

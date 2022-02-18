@@ -44,13 +44,13 @@ class _SearchScreenState extends State<SearchScreen> {
     }
     else {
       tempSearchStore = [];
-      for (var element in queryResultSet) {
+       for (var element in queryResultSet) {
         if (element['name'].startsWith(capitalizedValue)) {
-          setState(() {
-            tempSearchStore.add(element);
-          });
+           setState(() {
+             tempSearchStore.add(element);
+           });
         }
-      }
+       }
     }
   }
 
