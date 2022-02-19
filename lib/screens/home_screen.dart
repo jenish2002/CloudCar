@@ -25,7 +25,6 @@ class _HomeScreenState extends State<HomeScreen> {
   bool isLoading = false;
 
   fetchUserAndCar() async {
-
     setState(() {
       isLoading = true;
     });
@@ -36,20 +35,6 @@ class _HomeScreenState extends State<HomeScreen> {
         .then((value){
       loggedInUser = UserModel.fromJson(value.data()!);
     });
-
-    await FirebaseFirestore.instance.collection("cars").get().then((val) {
-      for(int i = 0; i < val.docs.length; i++) {
-        cars.add(CarModel.fromJson(val.docs[i].data()));
-      }
-
-      for(int i = 0; i < val.docs.length; i++) {
-        print(("Car ${i+1}"));
-        print(cars[i].brand);
-        print(cars[i].name);
-        print(cars[i].image);
-      }
-    });
-
     setState(() {
       isLoading = false;
     });
@@ -191,7 +176,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 leading: Icon(Icons.notifications_active),
               )
             ),
-            InkWell(
+            /*InkWell(
               onTap: (){},
               child: const ListTile(
                 title: Text('Settings',
@@ -214,7 +199,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 leading: Icon(Icons.help),
               )
-            ),
+            ),*/
             InkWell(
                 onTap: () {
                   logout(context);
@@ -232,7 +217,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
-      body: isLoading ? Center(child: CircularProgressIndicator()) : Center(
+      body: isLoading ? const Center(child: CircularProgressIndicator()) : Center(
         child: Padding(
           padding: const EdgeInsets.all(20),
           child: Column(
@@ -260,24 +245,15 @@ class _HomeScreenState extends State<HomeScreen> {
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(30),
                     ),
-
                   ),
-                  onChanged: (val){
-
-                  },
                 ),
               ),
               const SizedBox(height: 20),
-
             ],
           ),
         ),
       ),
     );
-  }
-
-  searchCar(String query) {
-
   }
 
   //logout function

@@ -1,9 +1,7 @@
+import 'package:car_app/model/car_model.dart';
 import 'package:car_app/screens/view_car_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-
-
-late String str;
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({Key? key}) : super(key: key);
@@ -14,44 +12,63 @@ class SearchScreen extends StatefulWidget {
 
 class _SearchScreenState extends State<SearchScreen> {
 
-  var queryResultSet = [];
-  var tempSearchStore = [];
+  List<String> cars = [];
+  List<String> searchCar = [];
+  Map<String,String> carIdWithName = {};
+  var isVisible = false;
+  var isDone = false;
+  CarModel carModel = CarModel();
+  CarModel carSearch = CarModel();
 
-  initiateSearch(value) {
-    if (value.length == 0) {
-      setState(() {
-        queryResultSet = [];
-        tempSearchStore = [];
-      });
-      return;
-    }
-    var capitalizedValue =
-        value.substring(0, 1).toUpperCase() + value.substring(1);
+  @override
+  void initState() {
+    super.initState();
+    findAllCar();
+  }
 
-    if (queryResultSet.isEmpty && value.length == 1) {
-      FirebaseFirestore.instance
-          .collection('cars')
-          .where('searchKey',
-          isEqualTo: value.substring(0, 1).toUpperCase())
-          .get().then((QuerySnapshot docs) {
-        for (int i = 0; i < docs.docs.length; i++) {
-          queryResultSet.add(docs.docs[i].data());
-          setState(() {
-            tempSearchStore.add(docs.docs[i].data());
-          });
-        }
-      });
-    }
-    else {
-      tempSearchStore = [];
-      for (var element in queryResultSet) {
-        if (element['name'].startsWith(capitalizedValue)) {
-          setState(() {
-            tempSearchStore.add(element);
-          });
+  getCarId(String str) {
+    if(carIdWithName.containsValue(str)) {
+      for(int i = 0; i < carIdWithName.length; i++) {
+        if(carIdWithName.values.elementAt(i).compareTo(str) == 0) {
+          return carIdWithName.keys.elementAt(i);
         }
       }
     }
+    /*await FirebaseFirestore.instance.collection("cars").doc(str)
+        .get().then((val) {
+      carSearch = CarModel.fromJson(val.data()!);
+      setState(() {
+
+      });
+    });*/
+  }
+
+  findAllCar() async {
+    await FirebaseFirestore.instance.collection("cars").get().then((val) async {
+      for(int i = 0; i < val.docs.length; i++) {
+        carModel =  await CarModel.fromJson(val.docs[i].data());
+        var s = carModel.brand! + " " + carModel.name! + " " + carModel.variant!;
+        carIdWithName[carModel.carId!] = s;
+        cars.add(s.toString());
+      }
+    });
+  }
+
+  initiateSearch(value) {
+    setState(() {
+      isVisible = false;
+    });
+    searchCar = [];
+    if(value.length > 0) {
+      var tmp = cars.where((item) => item.toLowerCase().contains(value.toString().toLowerCase()));
+      Iterator itr = tmp.iterator;
+      while(itr.moveNext()) {
+        searchCar.add(itr.current);
+      }
+    }
+    setState(() {
+      isVisible = true;
+    });
   }
 
   @override
@@ -82,52 +99,82 @@ class _SearchScreenState extends State<SearchScreen> {
       body: ListView(
         children: <Widget>[
           Padding(
-            padding: const EdgeInsets.fromLTRB(5, 10, 15, 10),
+            padding: const EdgeInsets.fromLTRB(5, 7, 15, 2),
             child: searchField,
           ),
-           const SizedBox(height: 10),
-            GridView.count(
-            restorationId: "new",
-            padding: const EdgeInsets.only(left: 10.0, right: 10.0),
-            crossAxisCount: 2,
-            crossAxisSpacing: 4.0,
-            mainAxisSpacing: 4.0,
-            primary: false,
-            shrinkWrap: true,
-            children: tempSearchStore.map((element) {
-              return buildResultCard(element,context);
-            }).toList()
+          const Divider(height: 10, thickness: 2, color: Colors.black26,),
+          const SizedBox(height: 10),
+          for(int i = 0; i < searchCar.length; i++)
+          GestureDetector(
+            onTap: () async {
+              var s = await getCarId(searchCar[i].toString());
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ViewCar(s),
+                )
+              );
+              FocusScope.of(context).unfocus();
+            },
+            child: ListTile(
+              title: makeResult(searchCar[i].toString())
+            ),
           ),
         ],
       ),
     );
   }
 }
-Widget buildResultCard(data,context) {
-  return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-      elevation: 2.0,
-      child: Center(
-        child: GestureDetector(
-          onTap: () {
-            str = data['name'];
-            String carId = data['carId'];
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => ViewCar(carId),
-              )
-            );
-            FocusScope.of(context).unfocus();
-          },
-          child: Text(data['name'] + " " + data['variant'],
-            textAlign: TextAlign.center,
-            style: const TextStyle(
-              color: Colors.black,
-              fontSize: 20.0,
+
+/*Widget makeResult(context, title) {
+  return GestureDetector(
+    onTap: () async {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ViewCar(title),
+          )
+      );
+      FocusScope.of(context).unfocus();
+    },
+    child: ListTile(
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(
+              title,
+              style: const TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.w400,
+                fontSize: 19,
+              ),
             ),
+            const Divider(
+              height: 27,
+              thickness: 2,
+            )
+          ],
+        ),
+    ),
+  );
+}*/
+
+Widget makeResult(title) {
+  return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(
+          title,
+          style: const TextStyle(
+            color: Colors.black,
+            fontWeight: FontWeight.w400,
+            fontSize: 19,
           ),
+        ),
+        const Divider(
+          height: 27,
+          thickness: 2,
         )
-      )
+      ],
   );
 }

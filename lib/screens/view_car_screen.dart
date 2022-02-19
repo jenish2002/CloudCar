@@ -1,6 +1,8 @@
+import 'dart:ui' as ui;
+import 'package:car_app/model/car_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 
 enum Flag {
   visible,
@@ -18,10 +20,9 @@ class ViewCar extends StatefulWidget {
 
 class _ViewCarState extends State<ViewCar> {
 
-  late AnimationController controller;
-  String image="";
-  String carName="";
-  String price="";
+  String? carName;
+  String? price;
+  String? image;
   ScrollController scrollController = ScrollController();
   var isLoading = true;
   late double _height;
@@ -31,16 +32,15 @@ class _ViewCarState extends State<ViewCar> {
   Flag engineTerminologies = Flag.invisible;
   Flag attributes = Flag.invisible;
   Flag brakesTyres = Flag.invisible;
+  CarModel carModel = CarModel();
 
-  void initialState() {
+  getCarDetails() async {
     setState(() {
       isLoading = true;
     });
-    FirebaseFirestore.instance.collection("cars").where("carId", isEqualTo: widget.value).get().then((QuerySnapshot docs) {
-      image = docs.docs[0].get("image").toString();
-      carName = docs.docs[0].get("brand").toString() + " " +
-                docs.docs[0].get("name").toString();
-      price = docs.docs[0].get("price").toString();
+    await FirebaseFirestore.instance.collection("cars")
+      .where("carId", isEqualTo: widget.value).get().then((val) async {
+      carModel = await CarModel.fromJson(val.docs[0].data());
       setState(() {
         isLoading = false;
       });
@@ -48,10 +48,22 @@ class _ViewCarState extends State<ViewCar> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    _height = MediaQuery.of(context).size.height;
+  void initState() {
+    super.initState();
+    print(widget.value);
+    getCarDetails();
+  }
 
-    initialState();
+  @override
+  Widget build(BuildContext context) {
+    RenderErrorBox.backgroundColor = Colors.white;
+    RenderErrorBox.textStyle = ui.TextStyle(color: Colors.white);
+    _height = MediaQuery.of(context).size.height;
+    carName = carModel.brand! + " " + carModel.name! + " " + carModel.variant!;
+    //price with inr symbol
+    price = '\u{20B9}' + carModel.price!;
+    image = carModel.image!;
+
     return WillPopScope(
       onWillPop: () async {
         Navigator.of(context).pop();
@@ -59,13 +71,14 @@ class _ViewCarState extends State<ViewCar> {
         return true;
       },
       child: Scaffold(
-        body: NestedScrollView(
+        backgroundColor: Colors.white,
+        body: (isLoading) ? const CircularProgressIndicator(): NestedScrollView(
           controller: scrollController,
           headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
             return <Widget>[
               SliverAppBar(
                 excludeHeaderSemantics: true,
-                expandedHeight: _height / 2.7,
+                expandedHeight: _height / 3.0,
                 backgroundColor: Colors.white,
                 floating: false,
                 pinned: false,
@@ -90,14 +103,13 @@ class _ViewCarState extends State<ViewCar> {
                       centerTitle: true,
                       background: SizedBox(
                         height: 200,
-                        child: //!isLoading ? const CircularProgressIndicator() :
-                        Image.network(
-                          image,
+                        child: Image.network(
+                          image!,
                           errorBuilder:(BuildContext context, Object exception,
                               StackTrace? stackTrace) {
                             return const CircularProgressIndicator();
                           },
-                          fit: BoxFit.cover,
+                          fit: BoxFit.contain,
                         ),
                       ),
                     );
@@ -118,7 +130,7 @@ class _ViewCarState extends State<ViewCar> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                        carName,
+                        carName!,
                         style: const TextStyle(
                           color: Colors.black,
                           fontWeight: FontWeight.w600,
@@ -127,8 +139,7 @@ class _ViewCarState extends State<ViewCar> {
                       ),
                       const SizedBox(height: 15),
                       Text(
-                        //price with inr symbol
-                        '\u{20B9} $price',
+                        price!,
                         style: const TextStyle(
                           color: Colors.black,
                           fontWeight: FontWeight.w600,
@@ -144,25 +155,25 @@ class _ViewCarState extends State<ViewCar> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      const ReturnText(title: "Overview", textType: "big",
-                        iconChange: Flag.invisible),
-                      const ReturnText(title: "Body Type", textType: "",
-                        iconChange: Flag.invisible),
-                      const ReturnText(title: "Fuel Type", textType: "",
-                        iconChange: Flag.invisible),
-                      const ReturnText(title: "Mileage", textType: "",
-                          iconChange: Flag.invisible),
-                      const ReturnText(title: "Seats", textType: "",
-                          iconChange: Flag.invisible),
-                      const ReturnText(title: "Airbags", textType: "",
-                          iconChange: Flag.invisible),
-                      const ReturnText(title: "Audio System", textType: "",
-                          iconChange: Flag.invisible),
-                      const ReturnText(title: "Drivetrain", textType: "",
-                          iconChange: Flag.invisible),
+                      const ReturnText(title: "Overview", data: "",
+                          textType: "big", iconChange: Flag.invisible),
+                      ReturnText(title: "Body Type", data: carModel.bodyType!,
+                          textType: "", iconChange: Flag.invisible),
+                      ReturnText(title: "Fuel Type", data: carModel.fuelType!,
+                          textType: "", iconChange: Flag.invisible),
+                      ReturnText(title: "Mileage", data: carModel.mileage!,
+                          textType: "", iconChange: Flag.invisible),
+                      ReturnText(title: "Seats", data: carModel.seats!,
+                          textType: "", iconChange: Flag.invisible),
+                      ReturnText(title: "Airbags", data: carModel.airbags!,
+                          textType: "", iconChange: Flag.invisible),
+                      ReturnText(title: "Audio System", data: carModel.audioSystem!,
+                          textType: "", iconChange: Flag.invisible),
+                      ReturnText(title: "Drivetrain", data: carModel.drivetrain!,
+                          textType: "", iconChange: Flag.invisible),
                       const SizedBox(height: 20),
-                      const ReturnText(title: "Features", textType: "big",
-                          iconChange: Flag.invisible),
+                      const ReturnText(title: "Features", data: "",
+                          textType: "big", iconChange: Flag.invisible),
                       GestureDetector(
                         onTap: () {
                           setState(() {
@@ -170,17 +181,17 @@ class _ViewCarState extends State<ViewCar> {
                             safety = Flag.visible : safety = Flag.invisible;
                           });
                         },
-                        child: ReturnText(title: "Safety", textType: "small",
-                          iconChange: safety),
+                        child: ReturnText(title: "Safety", data: "",
+                          textType: "small", iconChange: safety),
                       ),
                       (safety == Flag.visible) ?
                       Visibility(
                         child: Column(
                           children: <Widget>[
-                            ReturnText(title: "Airbags", textType: "",
-                                iconChange: safety),
-                            ReturnText(title: "NCAP Rating", textType: "",
-                                iconChange: safety),
+                            ReturnText(title: "Airbags", data: carModel.airbags!,
+                                textType: "", iconChange: safety),
+                            ReturnText(title: "NCAP Rating", data: carModel.airbags!,
+                                textType: "", iconChange: safety),
                           ],
                         ),
                       ) :
@@ -193,17 +204,17 @@ class _ViewCarState extends State<ViewCar> {
                             capacity = Flag.visible : capacity = Flag.invisible;
                           });
                         },
-                        child: ReturnText(title: "Capacity", textType: "small",
-                            iconChange: capacity),
+                        child: ReturnText(title: "Capacity", data: "",
+                            textType: "small",iconChange: capacity),
                       ),
                       (capacity == Flag.visible) ?
                       Visibility(
                         child: Column(
                           children: <Widget>[
-                            ReturnText(title: "Seats", textType: "",
-                                iconChange: capacity),
-                            ReturnText(title: "Fuel Tank", textType: "",
-                                iconChange: capacity),
+                            ReturnText(title: "Seats", data: carModel.seats!,
+                                textType: "", iconChange: capacity),
+                            ReturnText(title: "Fuel Tank", data: carModel.fuelTank!,
+                                textType: "", iconChange: capacity),
                           ],
                         ),
                       ) :
@@ -216,28 +227,28 @@ class _ViewCarState extends State<ViewCar> {
                             other = Flag.visible : other = Flag.invisible;
                           });
                         },
-                        child: ReturnText(title: "Other", textType: "small",
-                            iconChange: other),
+                        child: ReturnText(title: "Other",  data: "",
+                            textType: "small", iconChange: other),
                       ),
                       (other == Flag.visible) ?
                       Visibility(
                         child: Column(
                           children: <Widget>[
-                            ReturnText(title: "Audio System", textType: "",
-                                iconChange: other),
-                            ReturnText(title: "Power Windows", textType: "",
-                                iconChange: other),
-                            ReturnText(title: "Body Type", textType: "",
-                                iconChange: other),
-                            ReturnText(title: "Fuel Type", textType: "",
-                                iconChange: other),
+                            ReturnText(title: "Audio System", data: carModel.audioSystem!,
+                                textType: "", iconChange: other),
+                            ReturnText(title: "Power Windows", data: carModel.powerWindows!,
+                                textType: "", iconChange: other),
+                            ReturnText(title: "Body Type", data: carModel.bodyType!,
+                                textType: "", iconChange: other),
+                            ReturnText(title: "Fuel Type", data: carModel.fuelType!,
+                                textType: "", iconChange: other),
                           ],
                         ),
                       ) :
                       Container(),
                       const SizedBox(height: 20),
-                      const ReturnText(title: "Specification", textType: "big",
-                          iconChange: Flag.invisible),
+                      const ReturnText(title: "Specification",  data: "",
+                          textType: "big", iconChange: Flag.invisible),
                       GestureDetector(
                         onTap: () {
                           setState(() {
@@ -247,30 +258,31 @@ class _ViewCarState extends State<ViewCar> {
                           });
                         },
                         child: ReturnText(title: "Engine Terminologies",
-                            textType: "small",iconChange: safety),
+                            data: "", textType: "small",
+                            iconChange: engineTerminologies),
                       ),
                       (engineTerminologies == Flag.visible) ?
                       Visibility(
                         child: Column(
                           children: <Widget>[
-                            ReturnText(title: "Engine", textType: "",
-                                iconChange: engineTerminologies),
-                            ReturnText(title: "Emission Standard", textType: "",
-                                iconChange: engineTerminologies),
-                            ReturnText(title: "Mileage", textType: "",
-                                iconChange: engineTerminologies),
-                            ReturnText(title: "Max Torque", textType: "",
-                                iconChange: engineTerminologies),
-                            ReturnText(title: "Max Power", textType: "",
-                                iconChange: engineTerminologies),
-                            ReturnText(title: "Transmission", textType: "",
-                                iconChange: engineTerminologies),
-                            ReturnText(title: "Gears", textType: "",
-                                iconChange: engineTerminologies),
-                            ReturnText(title: "Drivetrain", textType: "",
-                                iconChange: engineTerminologies),
-                            ReturnText(title: "Cylinders", textType: "",
-                                iconChange: engineTerminologies),
+                            ReturnText(title: "Engine", data: carModel.engine!,
+                                textType: "", iconChange: engineTerminologies),
+                            ReturnText(title: "Emission Standard", data: carModel.emissionNorm!,
+                                textType: "", iconChange: engineTerminologies),
+                            ReturnText(title: "Mileage", data: carModel.mileage!,
+                                textType: "", iconChange: engineTerminologies),
+                            ReturnText(title: "Max Torque", data: carModel.torque!,
+                                textType: "", iconChange: engineTerminologies),
+                            ReturnText(title: "Max Power", data: carModel.power!,
+                                textType: "", iconChange: engineTerminologies),
+                            ReturnText(title: "Transmission", data: carModel.transmission!,
+                                textType: "", iconChange: engineTerminologies),
+                            ReturnText(title: "Gears", data: carModel.gears!,
+                                textType: "", iconChange: engineTerminologies),
+                            ReturnText(title: "Drivetrain", data: carModel.drivetrain!,
+                                textType: "", iconChange: engineTerminologies),
+                            ReturnText(title: "Cylinders", data: carModel.cylinders!,
+                                textType: "", iconChange: engineTerminologies),
                           ],
                         ),
                       ) :
@@ -284,23 +296,23 @@ class _ViewCarState extends State<ViewCar> {
                             attributes = Flag.invisible;
                           });
                         },
-                        child: ReturnText(title: "Attributes", textType: "small",
-                            iconChange: attributes),
+                        child: ReturnText(title: "Attributes", data: "",
+                            textType: "small", iconChange: attributes),
                       ),
                       (attributes == Flag.visible) ?
                       Visibility(
                         child: Column(
                           children: <Widget>[
-                            ReturnText(title: "Length", textType: "",
-                                iconChange: attributes),
-                            ReturnText(title: "Width", textType: "",
-                                iconChange: attributes),
-                            ReturnText(title: "Weight", textType: "",
-                                iconChange: attributes),
-                            ReturnText(title: "Height", textType: "",
-                                iconChange: attributes),
-                            ReturnText(title: "Ground Clearance", textType: "",
-                                iconChange: attributes),
+                            ReturnText(title: "Length", data: carModel.length!,
+                                textType: "", iconChange: attributes),
+                            ReturnText(title: "Width", data: carModel.width!,
+                                textType: "", iconChange: attributes),
+                            ReturnText(title: "Weight", data: carModel.weight!,
+                                textType: "", iconChange: attributes),
+                            ReturnText(title: "Height", data: carModel.height!,
+                                textType: "", iconChange: attributes),
+                            ReturnText(title: "Ground Clearance", data: carModel.groundClearance!,
+                                textType: "", iconChange: attributes),
                           ],
                         ),
                       ) :
@@ -314,26 +326,26 @@ class _ViewCarState extends State<ViewCar> {
                             brakesTyres = Flag.invisible;
                           });
                         },
-                        child: ReturnText(title: "Brakes & Tyres", textType: "small",
-                            iconChange: brakesTyres),
+                        child: ReturnText(title: "Brakes & Tyres", data: "",
+                            textType: "small", iconChange: brakesTyres),
                       ),
                       (brakesTyres == Flag.visible) ?
                       Visibility(
                         child: Column(
                           children: <Widget>[
-                            ReturnText(title: "Front Brakes", textType: "",
-                                iconChange: brakesTyres),
-                            ReturnText(title: "Rear Brakes", textType: "",
-                                iconChange: brakesTyres),
-                            ReturnText(title: "Wheels", textType: "",
-                                iconChange: brakesTyres),
+                            ReturnText(title: "Front Brakes", data: carModel.frontBrakes!,
+                                textType: "", iconChange: brakesTyres),
+                            ReturnText(title: "Rear Brakes", data: carModel.rearBrakes!,
+                                textType: "", iconChange: brakesTyres),
+                            ReturnText(title: "Wheels", data: carModel.wheels!,
+                                textType: "", iconChange: brakesTyres),
                           ],
                         ),
                       ) :
                       Container(),
                       const SizedBox(height: 20),
-                      const ReturnText(title: "Colors", textType: "big",
-                          iconChange: Flag.invisible),
+                      const ReturnText(title: "Colors", data: "",
+                          textType: "big", iconChange: Flag.invisible),
                     ],
                   ),
                 ),
@@ -349,12 +361,14 @@ class _ViewCarState extends State<ViewCar> {
 class ReturnText extends StatelessWidget {
 
   final String title;
+  final String data;
   final String textType;
   final Flag iconChange;
 
   const ReturnText({
     Key? key,
     required this.title,
+    required this.data,
     required this.textType,
     required this.iconChange,
   }) : super(key: key);
@@ -367,22 +381,34 @@ class ReturnText extends StatelessWidget {
         Row(
           children: <Widget>[
             Expanded(
-              child: Text(
+              child: (textType == "big" || textType == "small") ?
+              Text(
                 title,
-                style: (textType == "big" || textType == "small") ?
-                TextStyle(
+                style: TextStyle(
                   color: (textType == "big") ? Colors.black : Colors.black54,
                   fontWeight: (textType == "big") ? FontWeight.w500 :
                       FontWeight.w800,
                   fontSize: (textType == "big") ? 22 : 19,
-                ) :
-                const TextStyle(
+                ),
+              ) :
+              Text(
+                title,
+                style: const TextStyle(
                   color: Colors.black54,
                   fontWeight: FontWeight.w400,
                   fontSize: 17,
-                )
+                ),
               ),
             ),
+            (textType != "big" && textType != "small") ?
+            Text(
+              data,
+              style: const TextStyle(
+                color: Colors.black54,
+                fontWeight: FontWeight.w400,
+                fontSize: 17,
+              ),
+            ) : Container(),
             if(textType == "small")
               Icon(
                 (iconChange == Flag.invisible) ?
@@ -405,4 +431,3 @@ class ReturnText extends StatelessWidget {
     );
   }
 }
-

@@ -1,7 +1,3 @@
-// To parse this JSON data, do
-//
-//     final CarModel = CarModelFromJson(jsonString);
-
 import 'dart:convert';
 
 CarModel CarModelFromJson(String str) => CarModel.fromJson(json.decode(str));
@@ -10,9 +6,11 @@ String CarModelToJson(CarModel data) => json.encode(data.toJson());
 
 class CarModel {
   CarModel({
+    this.carId,
     this.image,
     this.brand,
     this.name,
+    this.price,
     this.variant,
     this.bodyType,
     this.colours,
@@ -29,7 +27,7 @@ class CarModel {
     this.airbags,
     this.audioSystem,
     this.powerWindows,
-    this.drivertrain,
+    this.drivetrain,
     this.emissionNorm,
     this.frontBrakes,
     this.rearBrakes,
@@ -41,9 +39,11 @@ class CarModel {
     this.wheels,
   });
 
+  String? carId;
   String? image;
   String? brand;
   String? name;
+  String? price;
   String? variant;
   String? bodyType;
   String? colours;
@@ -60,7 +60,7 @@ class CarModel {
   String? airbags;
   String? audioSystem;
   String? powerWindows;
-  String? drivertrain;
+  String? drivetrain;
   String? emissionNorm;
   String? frontBrakes;
   String? rearBrakes;
@@ -72,9 +72,11 @@ class CarModel {
   String? wheels;
 
   factory CarModel.fromJson(Map<String, dynamic> json) => CarModel(
+    carId: json["carId"],
     image: json["image"],
     brand: json["brand"],
     name: json["name"],
+    price: json["price"],
     variant: json["variant"],
     bodyType: json["body_type"],
     colours: json["colours"],
@@ -91,7 +93,7 @@ class CarModel {
     airbags: json["airbags"],
     audioSystem: json["audio_system"],
     powerWindows: json["power_windows"],
-    drivertrain: json["drivertrain"],
+    drivetrain: json["drivertrain"],
     emissionNorm: json["emission_norm"],
     frontBrakes: json["front_brakes"],
     rearBrakes: json["rear_brakes"],
@@ -104,9 +106,11 @@ class CarModel {
   );
 
   Map<String, dynamic> toJson() => {
+    "carId": carId,
     "image": image,
     "brand": brand,
     "name": name,
+    "price": price,
     "variant": variant,
     "body_type": bodyType,
     "colours": colours,
@@ -123,7 +127,7 @@ class CarModel {
     "airbags": airbags,
     "audio_system": audioSystem,
     "power_windows": powerWindows,
-    "drivertrain": drivertrain,
+    "drivetrain": drivetrain,
     "emission_norm": emissionNorm,
     "front_brakes": frontBrakes,
     "rear_brakes": rearBrakes,
