@@ -6,6 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'compare_car_screen.dart';
 import 'login_screen.dart';
 
 final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -57,7 +58,7 @@ class _HomeScreenState extends State<HomeScreen> {
         title: const Text(
           "Cloud Car",
           style: TextStyle(
-              color: Colors.black
+            color: Colors.black,
           ),
         ),
         leading: IconButton(
@@ -117,7 +118,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             const Divider(thickness: 1, indent: 10, endIndent: 10, color: Colors.black38),
             InkWell(
-              onTap: (){},
+              onTap: () => Navigator.of(context).pop(),
               child: const ListTile(
                 title: Text('Search Car',
                   style: TextStyle(
@@ -129,7 +130,11 @@ class _HomeScreenState extends State<HomeScreen> {
               )
             ),
             InkWell(
-              onTap: (){},
+              onTap: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => const CompareCarScreen()));
+              },
               child: const ListTile(
                 title: Text('Compare Cars',
                    style: TextStyle(
@@ -201,18 +206,18 @@ class _HomeScreenState extends State<HomeScreen> {
               )
             ),*/
             InkWell(
-                onTap: () {
-                  logout(context);
-                },
-                child: const ListTile(
-                  title: Text('Log Out',
-                      style: TextStyle(
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.w500,
-                      )
-                  ),
-                  leading: Icon(Icons.logout_rounded),
-                )
+              onTap: () {
+                logout(context);
+              },
+              child: const ListTile(
+                title: Text('Log Out',
+                  style: TextStyle(
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.w500,
+                  )
+                ),
+                leading: Icon(Icons.logout_rounded),
+              )
             ),
           ],
         ),
@@ -228,10 +233,10 @@ class _HomeScreenState extends State<HomeScreen> {
               GestureDetector(
                 onTap: () {
                   Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const SearchScreen()
-                      )
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const SearchScreen("home")
+                    )
                   );
                 },
                 child: TextFormField(
@@ -259,6 +264,7 @@ class _HomeScreenState extends State<HomeScreen> {
   //logout function
   Future<void> logout(BuildContext context) async {
     await FirebaseAuth.instance.signOut();
-    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const LoginScreen()));
+    Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => const LoginScreen()));
   }
 }

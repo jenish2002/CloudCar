@@ -74,7 +74,7 @@ class CarModel {
   factory CarModel.fromJson(Map<String, dynamic> json) => CarModel(
     carId: json["carId"],
     image: json["image"],
-    brand: json["brand"] == null ? null : json["brand"],
+    brand: json["brand"],
     name: json["name"],
     price: json["price"],
     variant: json["variant"],

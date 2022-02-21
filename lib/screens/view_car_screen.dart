@@ -40,7 +40,11 @@ class _ViewCarState extends State<ViewCar> {
     });
     await FirebaseFirestore.instance.collection("cars")
       .where("carId", isEqualTo: widget.value).get().then((val) async {
-      carModel = await CarModel.fromJson(val.docs[0].data());
+      carModel = CarModel.fromJson(val.docs[0].data());
+      carName = carModel.brand! + " " + carModel.name! + " " + carModel.variant!;
+      //price with inr symbol
+      price = '\u{20B9}' + carModel.price!;
+      image = carModel.image!;
       setState(() {
         isLoading = false;
       });
@@ -50,7 +54,6 @@ class _ViewCarState extends State<ViewCar> {
   @override
   void initState() {
     super.initState();
-    print(widget.value);
     getCarDetails();
   }
 
@@ -59,27 +62,19 @@ class _ViewCarState extends State<ViewCar> {
     RenderErrorBox.backgroundColor = Colors.white;
     RenderErrorBox.textStyle = ui.TextStyle(color: Colors.white);
     _height = MediaQuery.of(context).size.height;
-    carName = carModel.brand! + " " + carModel.name! + " " + carModel.variant!;
-    //price with inr symbol
-    price = '\u{20B9}' + carModel.price!;
-    image = carModel.image!;
 
-    return WillPopScope(
-      onWillPop: () async {
-        Navigator.of(context).pop();
-        Navigator.of(context).pop();
-        return true;
-      },
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        body: (isLoading) ? const CircularProgressIndicator(): NestedScrollView(
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: (isLoading) ? const Center(child: CircularProgressIndicator()):
+        NestedScrollView(
           controller: scrollController,
           headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
             return <Widget>[
               SliverAppBar(
                 excludeHeaderSemantics: true,
                 expandedHeight: _height / 3.0,
-                backgroundColor: Colors.white,
+                backgroundColor: Colors.transparent,
                 floating: false,
                 pinned: false,
                 snap: false,
@@ -93,7 +88,6 @@ class _ViewCarState extends State<ViewCar> {
                   onPressed: () {
                     //go back button
                     Navigator.of(context).pop();
-                    Navigator.of(context).pop();
                   }
                 ),
                 flexibleSpace: LayoutBuilder(
@@ -105,11 +99,15 @@ class _ViewCarState extends State<ViewCar> {
                         height: 200,
                         child: Image.network(
                           image!,
+                          loadingBuilder: (context, child, loadingProgress) {
+                            if(loadingProgress == null) return child;
+                            return const Center(child: CircularProgressIndicator());
+                          },
                           errorBuilder:(BuildContext context, Object exception,
                               StackTrace? stackTrace) {
-                            return const CircularProgressIndicator();
+                            return const Center(child: CircularProgressIndicator());
                           },
-                          fit: BoxFit.contain,
+                          fit: BoxFit.cover,
                         ),
                       ),
                     );
@@ -353,7 +351,7 @@ class _ViewCarState extends State<ViewCar> {
             ),
           ),
         ),
-      )
+      ),
     );
   }
 }
