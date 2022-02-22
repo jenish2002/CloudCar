@@ -59,7 +59,7 @@ class _SearchScreenState extends State<SearchScreen> {
                     ),
                     onPressed: () {
                       //go back button
-                      Navigator.pop(context, [null, null]);
+                      Navigator.pop(context, [null]);
                     }
                 ),
                 flexibleSpace: LayoutBuilder(
@@ -100,7 +100,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   onTap: () async {
                     var s = await getCarId(searchCar[i].toString());
                     if(widget.value == "compare") {
-                      Navigator.pop(context, [s, ""]);
+                      Navigator.pop(context, [searchCar[i].toString()]);
                     }
                     else {
                       Navigator.pushReplacement(context,
@@ -171,7 +171,7 @@ Widget makeResult(title) {
         ),
         const SizedBox(height: 18),
         const Divider(
-          height: 0,//27,
+          height: 0,
           thickness: 2,
         )
       ],
