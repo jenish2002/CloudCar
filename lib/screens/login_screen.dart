@@ -165,7 +165,7 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
-
+  
   //login function
   void logIn(String email, String password) async {
     if(_formKey.currentState!.validate()) {
@@ -173,8 +173,8 @@ class _LoginScreenState extends State<LoginScreen> {
         await _auth.signInWithEmailAndPassword(email: email, password: password)
             .then((uid) => {
           Fluttertoast.showToast(msg: "Login successful"),
-          Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (context) => const HomeScreen())),
+          Navigator.of(context).pushReplacement(MaterialPageRoute(
+              builder: (context) => const HomeScreen(value: "login"))),
         });
       } on FirebaseAuthException catch(ex) {
         if(ex.code == 'wrong-password' || ex.code == 'user-not-found') {

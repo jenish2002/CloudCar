@@ -23,8 +23,8 @@ class _ViewCarState extends State<ViewCar> {
   String? carName;
   String? price;
   String? image;
-  ScrollController scrollController = ScrollController();
-  var isLoading = true;
+  final ScrollController scrollController = ScrollController();
+  bool isLoading = true;
   late double _height;
   Flag safety = Flag.invisible;
   Flag capacity = Flag.invisible;
@@ -43,7 +43,7 @@ class _ViewCarState extends State<ViewCar> {
       carModel = CarModel.fromJson(val.docs[0].data());
       carName = carModel.brand! + " " + carModel.name! + " " + carModel.variant!;
       //price with inr symbol
-      price = '\u{20B9}' + carModel.price!;
+      price = '\u{20B9} ' + carModel.price!;
       image = carModel.image!;
       setState(() {
         isLoading = false;
@@ -83,7 +83,7 @@ class _ViewCarState extends State<ViewCar> {
                 leading: IconButton(
                   icon: const Icon(
                     Icons.arrow_back_ios_new_rounded,
-                    color: Colors.black38,
+                    color: Colors.black45,
                   ),
                   onPressed: () {
                     //go back button
@@ -116,238 +116,229 @@ class _ViewCarState extends State<ViewCar> {
               ),
             ];
           },
-          body: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.all(14),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                        carName!,
-                        style: const TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 23,
-                        ),
+          body: Theme(
+            data: Theme.of(context).copyWith(
+              colorScheme: ColorScheme.fromSwatch().copyWith(secondary: Colors.black26)
+            ),
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(14),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      carName!,
+                      style: const TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 23,
                       ),
-                      const SizedBox(height: 15),
-                      Text(
-                        price!,
-                        style: const TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 22,
-                        ),
+                    ),
+                    const SizedBox(height: 15),
+                    Text(
+                      price!,
+                      style: const TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 22,
                       ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(14),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      const ReturnText(title: "Overview", data: "",
-                          textType: "big", iconChange: Flag.invisible),
-                      ReturnText(title: "Body Type", data: carModel.bodyType!,
-                          textType: "", iconChange: Flag.invisible),
-                      ReturnText(title: "Fuel Type", data: carModel.fuelType!,
-                          textType: "", iconChange: Flag.invisible),
-                      ReturnText(title: "Mileage", data: carModel.mileage!,
-                          textType: "", iconChange: Flag.invisible),
-                      ReturnText(title: "Seats", data: carModel.seats!,
-                          textType: "", iconChange: Flag.invisible),
-                      ReturnText(title: "Airbags", data: carModel.airbags!,
-                          textType: "", iconChange: Flag.invisible),
-                      ReturnText(title: "Audio System", data: carModel.audioSystem!,
-                          textType: "", iconChange: Flag.invisible),
-                      ReturnText(title: "Drivetrain", data: carModel.drivetrain!,
-                          textType: "", iconChange: Flag.invisible),
-                      const SizedBox(height: 20),
-                      const ReturnText(title: "Features", data: "",
-                          textType: "big", iconChange: Flag.invisible),
-                      GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            (safety == Flag.invisible) ?
-                            safety = Flag.visible : safety = Flag.invisible;
-                          });
-                        },
-                        child: ReturnText(title: "Safety", data: "",
+                    ),
+                    const SizedBox(height: 25),
+                    const ReturnText(title: "Overview", data: "",
+                        textType: "big", iconChange: Flag.invisible),
+                    ReturnText(title: "Body Type", data: carModel.bodyType!,
+                        textType: "", iconChange: Flag.invisible),
+                    ReturnText(title: "Fuel Type", data: carModel.fuelType!,
+                        textType: "", iconChange: Flag.invisible),
+                    ReturnText(title: "Mileage", data: carModel.mileage!,
+                        textType: "", iconChange: Flag.invisible),
+                    ReturnText(title: "Seats", data: carModel.seats!,
+                        textType: "", iconChange: Flag.invisible),
+                    ReturnText(title: "Airbags", data: carModel.airbags!,
+                        textType: "", iconChange: Flag.invisible),
+                    ReturnText(title: "Audio System", data: carModel.audioSystem!,
+                        textType: "", iconChange: Flag.invisible),
+                    ReturnText(title: "Drivetrain", data: carModel.drivetrain!,
+                        textType: "", iconChange: Flag.invisible),
+                    const SizedBox(height: 20),
+                    const ReturnText(title: "Features", data: "",
+                        textType: "big", iconChange: Flag.invisible),
+                    GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          (safety == Flag.invisible) ?
+                          safety = Flag.visible : safety = Flag.invisible;
+                        });
+                      },
+                      child: ReturnText(title: "Safety", data: "",
                           textType: "small", iconChange: safety),
+                    ),
+                    (safety == Flag.visible) ?
+                    Visibility(
+                      child: Column(
+                        children: <Widget>[
+                          ReturnText(title: "Airbags", data: carModel.airbags!,
+                              textType: "", iconChange: safety),
+                          ReturnText(title: "NCAP Rating", data: carModel.airbags!,
+                              textType: "", iconChange: safety),
+                        ],
                       ),
-                      (safety == Flag.visible) ?
-                      Visibility(
-                        child: Column(
-                          children: <Widget>[
-                            ReturnText(title: "Airbags", data: carModel.airbags!,
-                                textType: "", iconChange: safety),
-                            ReturnText(title: "NCAP Rating", data: carModel.airbags!,
-                                textType: "", iconChange: safety),
-                          ],
-                        ),
-                      ) :
-                      Container(),
-                      const SizedBox(height: 5),
-                      GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            (capacity == Flag.invisible) ?
-                            capacity = Flag.visible : capacity = Flag.invisible;
-                          });
-                        },
-                        child: ReturnText(title: "Capacity", data: "",
-                            textType: "small",iconChange: capacity),
+                    ) :
+                    Container(),
+                    const SizedBox(height: 5),
+                    GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          (capacity == Flag.invisible) ?
+                          capacity = Flag.visible : capacity = Flag.invisible;
+                        });
+                      },
+                      child: ReturnText(title: "Capacity", data: "",
+                          textType: "small",iconChange: capacity),
+                    ),
+                    (capacity == Flag.visible) ?
+                    Visibility(
+                      child: Column(
+                        children: <Widget>[
+                          ReturnText(title: "Seats", data: carModel.seats!,
+                              textType: "", iconChange: capacity),
+                          ReturnText(title: "Fuel Tank", data: carModel.fuelTank!,
+                              textType: "", iconChange: capacity),
+                        ],
                       ),
-                      (capacity == Flag.visible) ?
-                      Visibility(
-                        child: Column(
-                          children: <Widget>[
-                            ReturnText(title: "Seats", data: carModel.seats!,
-                                textType: "", iconChange: capacity),
-                            ReturnText(title: "Fuel Tank", data: carModel.fuelTank!,
-                                textType: "", iconChange: capacity),
-                          ],
-                        ),
-                      ) :
-                      Container(),
-                      const SizedBox(height: 5),
-                      GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            (other == Flag.invisible) ?
-                            other = Flag.visible : other = Flag.invisible;
-                          });
-                        },
-                        child: ReturnText(title: "Other",  data: "",
-                            textType: "small", iconChange: other),
+                    ) :
+                    Container(),
+                    const SizedBox(height: 5),
+                    GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          (other == Flag.invisible) ?
+                          other = Flag.visible : other = Flag.invisible;
+                        });
+                      },
+                      child: ReturnText(title: "Other",  data: "",
+                          textType: "small", iconChange: other),
+                    ),
+                    (other == Flag.visible) ?
+                    Visibility(
+                      child: Column(
+                        children: <Widget>[
+                          ReturnText(title: "Audio System", data: carModel.audioSystem!,
+                              textType: "", iconChange: other),
+                          ReturnText(title: "Power Windows", data: carModel.powerWindows!,
+                              textType: "", iconChange: other),
+                          ReturnText(title: "Body Type", data: carModel.bodyType!,
+                              textType: "", iconChange: other),
+                          ReturnText(title: "Fuel Type", data: carModel.fuelType!,
+                              textType: "", iconChange: other),
+                        ],
                       ),
-                      (other == Flag.visible) ?
-                      Visibility(
-                        child: Column(
-                          children: <Widget>[
-                            ReturnText(title: "Audio System", data: carModel.audioSystem!,
-                                textType: "", iconChange: other),
-                            ReturnText(title: "Power Windows", data: carModel.powerWindows!,
-                                textType: "", iconChange: other),
-                            ReturnText(title: "Body Type", data: carModel.bodyType!,
-                                textType: "", iconChange: other),
-                            ReturnText(title: "Fuel Type", data: carModel.fuelType!,
-                                textType: "", iconChange: other),
-                          ],
-                        ),
-                      ) :
-                      Container(),
-                      const SizedBox(height: 20),
-                      const ReturnText(title: "Specification",  data: "",
-                          textType: "big", iconChange: Flag.invisible),
-                      GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            (engineTerminologies == Flag.invisible) ?
-                            engineTerminologies = Flag.visible :
-                            engineTerminologies = Flag.invisible;
-                          });
-                        },
-                        child: ReturnText(title: "Engine Terminologies",
-                            data: "", textType: "small",
-                            iconChange: engineTerminologies),
+                    ) :
+                    Container(),
+                    const SizedBox(height: 20),
+                    const ReturnText(title: "Specification",  data: "",
+                        textType: "big", iconChange: Flag.invisible),
+                    GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          (engineTerminologies == Flag.invisible) ?
+                          engineTerminologies = Flag.visible :
+                          engineTerminologies = Flag.invisible;
+                        });
+                      },
+                      child: ReturnText(title: "Engine Terminologies",
+                          data: "", textType: "small",
+                          iconChange: engineTerminologies),
+                    ),
+                    (engineTerminologies == Flag.visible) ?
+                    Visibility(
+                      child: Column(
+                        children: <Widget>[
+                          ReturnText(title: "Engine", data: carModel.engine!,
+                              textType: "", iconChange: engineTerminologies),
+                          ReturnText(title: "Emission Standard", data: carModel.emissionNorm!,
+                              textType: "", iconChange: engineTerminologies),
+                          ReturnText(title: "Mileage", data: carModel.mileage!,
+                              textType: "", iconChange: engineTerminologies),
+                          ReturnText(title: "Max Torque", data: carModel.torque!,
+                              textType: "", iconChange: engineTerminologies),
+                          ReturnText(title: "Max Power", data: carModel.power!,
+                              textType: "", iconChange: engineTerminologies),
+                          ReturnText(title: "Transmission", data: carModel.transmission!,
+                              textType: "", iconChange: engineTerminologies),
+                          ReturnText(title: "Gears", data: carModel.gears!,
+                              textType: "", iconChange: engineTerminologies),
+                          ReturnText(title: "Drivetrain", data: carModel.drivetrain!,
+                              textType: "", iconChange: engineTerminologies),
+                          ReturnText(title: "Cylinders", data: carModel.cylinders!,
+                              textType: "", iconChange: engineTerminologies),
+                        ],
                       ),
-                      (engineTerminologies == Flag.visible) ?
-                      Visibility(
-                        child: Column(
-                          children: <Widget>[
-                            ReturnText(title: "Engine", data: carModel.engine!,
-                                textType: "", iconChange: engineTerminologies),
-                            ReturnText(title: "Emission Standard", data: carModel.emissionNorm!,
-                                textType: "", iconChange: engineTerminologies),
-                            ReturnText(title: "Mileage", data: carModel.mileage!,
-                                textType: "", iconChange: engineTerminologies),
-                            ReturnText(title: "Max Torque", data: carModel.torque!,
-                                textType: "", iconChange: engineTerminologies),
-                            ReturnText(title: "Max Power", data: carModel.power!,
-                                textType: "", iconChange: engineTerminologies),
-                            ReturnText(title: "Transmission", data: carModel.transmission!,
-                                textType: "", iconChange: engineTerminologies),
-                            ReturnText(title: "Gears", data: carModel.gears!,
-                                textType: "", iconChange: engineTerminologies),
-                            ReturnText(title: "Drivetrain", data: carModel.drivetrain!,
-                                textType: "", iconChange: engineTerminologies),
-                            ReturnText(title: "Cylinders", data: carModel.cylinders!,
-                                textType: "", iconChange: engineTerminologies),
-                          ],
-                        ),
-                      ) :
-                      Container(),
-                      const SizedBox(height: 5),
-                      GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            (attributes == Flag.invisible) ?
-                            attributes = Flag.visible :
-                            attributes = Flag.invisible;
-                          });
-                        },
-                        child: ReturnText(title: "Attributes", data: "",
-                            textType: "small", iconChange: attributes),
+                    ) :
+                    Container(),
+                    const SizedBox(height: 5),
+                    GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          (attributes == Flag.invisible) ?
+                          attributes = Flag.visible :
+                          attributes = Flag.invisible;
+                        });
+                      },
+                      child: ReturnText(title: "Attributes", data: "",
+                          textType: "small", iconChange: attributes),
+                    ),
+                    (attributes == Flag.visible) ?
+                    Visibility(
+                      child: Column(
+                        children: <Widget>[
+                          ReturnText(title: "Length", data: carModel.length!,
+                              textType: "", iconChange: attributes),
+                          ReturnText(title: "Width", data: carModel.width!,
+                              textType: "", iconChange: attributes),
+                          ReturnText(title: "Weight", data: carModel.weight!,
+                              textType: "", iconChange: attributes),
+                          ReturnText(title: "Height", data: carModel.height!,
+                              textType: "", iconChange: attributes),
+                          ReturnText(title: "Ground Clearance", data: carModel.groundClearance!,
+                              textType: "", iconChange: attributes),
+                        ],
                       ),
-                      (attributes == Flag.visible) ?
-                      Visibility(
-                        child: Column(
-                          children: <Widget>[
-                            ReturnText(title: "Length", data: carModel.length!,
-                                textType: "", iconChange: attributes),
-                            ReturnText(title: "Width", data: carModel.width!,
-                                textType: "", iconChange: attributes),
-                            ReturnText(title: "Weight", data: carModel.weight!,
-                                textType: "", iconChange: attributes),
-                            ReturnText(title: "Height", data: carModel.height!,
-                                textType: "", iconChange: attributes),
-                            ReturnText(title: "Ground Clearance", data: carModel.groundClearance!,
-                                textType: "", iconChange: attributes),
-                          ],
-                        ),
-                      ) :
-                      Container(),
-                      const SizedBox(height: 5),
-                      GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            (brakesTyres == Flag.invisible) ?
-                            brakesTyres = Flag.visible :
-                            brakesTyres = Flag.invisible;
-                          });
-                        },
-                        child: ReturnText(title: "Brakes & Tyres", data: "",
-                            textType: "small", iconChange: brakesTyres),
+                    ) :
+                    Container(),
+                    const SizedBox(height: 5),
+                    GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          (brakesTyres == Flag.invisible) ?
+                          brakesTyres = Flag.visible :
+                          brakesTyres = Flag.invisible;
+                        });
+                      },
+                      child: ReturnText(title: "Brakes & Tyres", data: "",
+                          textType: "small", iconChange: brakesTyres),
+                    ),
+                    (brakesTyres == Flag.visible) ?
+                    Visibility(
+                      child: Column(
+                        children: <Widget>[
+                          ReturnText(title: "Front Brakes", data: carModel.frontBrakes!,
+                              textType: "", iconChange: brakesTyres),
+                          ReturnText(title: "Rear Brakes", data: carModel.rearBrakes!,
+                              textType: "", iconChange: brakesTyres),
+                          ReturnText(title: "Wheels", data: carModel.wheels!,
+                              textType: "", iconChange: brakesTyres),
+                        ],
                       ),
-                      (brakesTyres == Flag.visible) ?
-                      Visibility(
-                        child: Column(
-                          children: <Widget>[
-                            ReturnText(title: "Front Brakes", data: carModel.frontBrakes!,
-                                textType: "", iconChange: brakesTyres),
-                            ReturnText(title: "Rear Brakes", data: carModel.rearBrakes!,
-                                textType: "", iconChange: brakesTyres),
-                            ReturnText(title: "Wheels", data: carModel.wheels!,
-                                textType: "", iconChange: brakesTyres),
-                          ],
-                        ),
-                      ) :
-                      Container(),
-                      const SizedBox(height: 20),
-                      const ReturnText(title: "Colors", data: "",
-                          textType: "big", iconChange: Flag.invisible),
-                    ],
-                  ),
+                    ) :
+                    Container(),
+                    const SizedBox(height: 20),
+                    const ReturnText(title: "Colors", data: "",
+                        textType: "big", iconChange: Flag.invisible),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
         ),

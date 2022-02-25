@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:car_app/model/car_model.dart';
 import 'package:car_app/model/user_model.dart';
 import 'package:car_app/screens/search_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -12,7 +11,8 @@ import 'login_screen.dart';
 final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  final String value;
+  const HomeScreen({Key? key, required this.value}) : super(key: key);
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -22,8 +22,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   User? user = FirebaseAuth.instance.currentUser;
   UserModel loggedInUser = UserModel();
-  List<CarModel> cars = [];
   bool isLoading = false;
+  late Timer timer;
 
   fetchUserAndCar() async {
     setState(() {
@@ -44,6 +44,9 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+    if(widget.value == "login") {
+      timer = Timer.periodic(const Duration(days: 7), (_) => logout(context));
+    }
     fetchUserAndCar();
   }
 
@@ -97,14 +100,14 @@ class _HomeScreenState extends State<HomeScreen> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        Text("${loggedInUser.firstName} ${loggedInUser.secondName}",
+                        Text(isLoading ? "Loading..." : "${loggedInUser.firstName} ${loggedInUser.secondName}",
                           style: const TextStyle(
                             fontSize: 20.0,
                             fontWeight: FontWeight.bold,
                           )
                         ),
                         const SizedBox(height: 5),
-                        Text("${loggedInUser.email}",
+                        Text(isLoading ? "Loading..." : "${loggedInUser.email}",
                             style: const TextStyle(
                               fontSize: 16.0,
                               fontWeight: FontWeight.w400,
@@ -222,7 +225,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
-      body: isLoading ? const Center(child: CircularProgressIndicator()) : Center(
+      body: Center(
         child: Padding(
           padding: const EdgeInsets.all(20),
           child: Column(
@@ -263,6 +266,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   //logout function
   Future<void> logout(BuildContext context) async {
+    if(widget.value == "login") {
+      timer.cancel();
+    }
     await FirebaseAuth.instance.signOut();
     Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (context) => const LoginScreen()));

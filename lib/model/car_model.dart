@@ -12,6 +12,7 @@ class CarModel {
     this.name,
     this.price,
     this.variant,
+    this.ncapRating,
     this.bodyType,
     this.colours,
     this.seats,
@@ -45,6 +46,7 @@ class CarModel {
   String? name;
   String? price;
   String? variant;
+  String? ncapRating;
   String? bodyType;
   String? colours;
   String? seats;
@@ -78,6 +80,7 @@ class CarModel {
     name: json["name"],
     price: json["price"],
     variant: json["variant"],
+    ncapRating: json["ncap_rating"],
     bodyType: json["body_type"],
     colours: json["colours"],
     seats: json["seats"],
@@ -112,6 +115,7 @@ class CarModel {
     "name": name,
     "price": price,
     "variant": variant,
+    "ncap_rating": ncapRating,
     "body_type": bodyType,
     "colours": colours,
     "seats": seats,

@@ -290,7 +290,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       .set(userModel.toJson());
     Fluttertoast.showToast(msg: "Account created successfully");
 
-    Navigator.pushAndRemoveUntil((context), MaterialPageRoute(builder: (context) => const HomeScreen()),
+    Navigator.pushAndRemoveUntil((context), MaterialPageRoute(builder: (context) => const HomeScreen(value: "login")),
         (route) => false);
   }
 }

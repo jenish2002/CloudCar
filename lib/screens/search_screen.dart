@@ -55,7 +55,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 leading: IconButton(
                     icon: const Icon(
                       Icons.arrow_back_ios_new_rounded,
-                      color: Colors.black38,
+                      color: Colors.black45,
                     ),
                     onPressed: () {
                       //go back button
@@ -132,7 +132,7 @@ class _SearchScreenState extends State<SearchScreen> {
 
   findAllCar() async {
     setState(() {});
-    await FirebaseFirestore.instance.collection("cars").get().then((val) async {
+    await FirebaseFirestore.instance.collection("cars").get().then((val) {
       for(int i = 0; i < val.docs.length; i++) {
         carModel =  CarModel.fromJson(val.docs[i].data());
         var s = carModel.brand! + " " + carModel.name! + " " + carModel.variant!;
@@ -140,6 +140,7 @@ class _SearchScreenState extends State<SearchScreen> {
         cars.add(s.toString());
       }
     });
+    setState(() {});
   }
 
   initiateSearch(value) {
