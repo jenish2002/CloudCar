@@ -33,27 +33,38 @@ class _CompareCarScreenState extends State<CompareCarScreen>{
   CarModel carModel2 = CarModel();
   
   _navigateNextPageAndRetriveValue(BuildContext context) async {
-    List nextPageValues = await Navigator.push(context,
-        MaterialPageRoute(builder: (context) => const SearchScreen("compare")),
-    );
+    List nextPageValues;
+    if(carname1 != null && carname2 == null) {
+      nextPageValues = await Navigator.push(context,
+        MaterialPageRoute(builder: (context) => SearchScreen(carname1!))
+      );
+    }
+    else if(carname2 != null && carname1 == null) {
+      nextPageValues = await Navigator.push(context,
+        MaterialPageRoute(builder: (context) => SearchScreen(carname2!)),
+      );
+    }
+    else if(clicked == 1 && carname2 != null) {
+      nextPageValues = await Navigator.push(context,
+        MaterialPageRoute(builder: (context) => SearchScreen(carname2!)),
+      );
+    }
+    else if(clicked == 2 && carname1 != null) {
+      nextPageValues = await Navigator.push(context,
+        MaterialPageRoute(builder: (context) => SearchScreen(carname1!)),
+      );
+    }
+    else {
+      nextPageValues = await Navigator.push(context,
+        MaterialPageRoute(builder: (context) => const SearchScreen("")),
+      );
+    }
     setState(() {
       if(clicked == 1 && nextPageValues[0] != null) {
-        if(carname2 == nextPageValues[0]) {
-          carname1 = null;
-          Fluttertoast.showToast(msg: "Can't compare same model");
-        }
-        else {
-          carname1 = nextPageValues[0];
-        }
+        carname1 = nextPageValues[0];
       }
       else if(clicked == 2 && nextPageValues[0] != null) {
-        if(carname1 == nextPageValues[0]) {
-          carname2 = null;
-          Fluttertoast.showToast(msg: "Can't compare same model");
-        }
-        else {
-          carname2 = nextPageValues[0];
-        }
+        carname2 = nextPageValues[0];
       }
     });
   }
@@ -74,9 +85,6 @@ class _CompareCarScreenState extends State<CompareCarScreen>{
   @override
   void initState() {
     super.initState();
-    /*if(!isVisible) {
-      getCarDetails();
-    }*/
   }
 
   @override
@@ -229,154 +237,42 @@ class _CompareCarScreenState extends State<CompareCarScreen>{
       ),
     );
   }
-}
 
-Widget displayText(width, title, data1, data2, textType, iconChange, compareType) {
-  String tmp1 = "", tmp2 = "";
-  if(compareType == "num") {
-    tmp1 = data1;
-    tmp2 = data2;
-  }
-  else if(compareType == "value") {
-    tmp1 = data1.substring(0,data1.indexOf(" ")).trim();
-    tmp2 = data2.substring(0,data2.indexOf(" ")).trim();
-  }
-  /*if(compareType == "num" || compareType == "value") {
-    if(double.parse(tmp1) > double.parse(tmp2)) {
-      c1++;
-    }
-    else {
-      c2++;
-    }
-  }*/
-  return Container(
-    color: (textType == "small") ? Colors.black12 : Colors.white,
-    padding: (textType == "small") ? const EdgeInsets.all(10) : EdgeInsets.zero,
-    child: Column(
-      children: <Widget>[
-        (data1 == "") ? Row(
-          children: <Widget>[
-            Expanded(
-              child: (textType == "big") ?
-              Text(
-                title,
-                style: const TextStyle(
-                  color: Colors.black54,
-                  fontWeight: FontWeight.w800,
-                  fontSize: 19,
-                ),
-              ) :
-              Text(
-                title,
-                style: const TextStyle(
-                  color: Colors.black54,
-                  fontWeight: FontWeight.w400,
-                  fontSize: 17,
-                ),
-              ),
-            ),
-            (textType == "big") ?
-            Icon(
-              (iconChange == Flag.invisible) ?
-              Icons.keyboard_arrow_down_rounded :
-              Icons.keyboard_arrow_up_rounded,
-              color: Colors.redAccent,
-            ) : Container(),
-          ],
-        ) :
-        IntrinsicHeight(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Container(
-                width: width / 2,
-                //color: ((compareType == "num" || compareType == "value") && (double.parse(tmp1) > double.parse(tmp2))) ? Colors.lightGreenAccent : Colors.transparent,
-                padding: const EdgeInsets.only(left: 15, right: 15, top: 11, bottom: 11),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                      Expanded(
-                      child: Text(
-                        data1,
-                        style: const TextStyle(
-                          color: Colors.black54,
-                          fontWeight: FontWeight.w400,
-                          fontSize: 17,
-                        ),
-                      ),
-                    ),
-                    (compareType == "num" || compareType == "value") ?
-                    (double.parse(tmp1) > double.parse(tmp2)) ?
-                    Container(
-                      width: 13,
-                      decoration: const BoxDecoration(
-                        color: Colors.lightGreenAccent,
-                        shape: BoxShape.circle
-                      ),
-                    ) : (double.parse(tmp1) != double.parse(tmp2)) ?
-                    Container(
-                      width: 13,
-                      decoration: const BoxDecoration(
-                          color: Colors.redAccent,
-                          shape: BoxShape.circle
-                      ),
-                    ) : Container() : Container(),
-                  ],
-                ),
-              ),
-              const VerticalDivider(width : 0, thickness: 1, color: Colors.black26),
-              Container(
-                width: width / 2,
-                //color: ((compareType == "num" || compareType == "value") && (double.parse(tmp1) < double.parse(tmp2))) ? Colors.lightGreenAccent : Colors.transparent,
-                padding: const EdgeInsets.only(left: 15, right: 15, top: 11, bottom: 11),
-                child: Row(
-                  children: <Widget>[
-                     Expanded(
-                      child: Text(
-                        data2,
-                        style: const TextStyle(
-                          color: Colors.black54,
-                          fontWeight: FontWeight.w400,
-                          fontSize: 17,
-                        ),
-                      ),
-                    ),
-                    (compareType == "num" || compareType == "value") ?
-                    (double.parse(tmp1) < double.parse(tmp2)) ?
-                    Container(
-                      width: 15,
-                      decoration: const BoxDecoration(
-                        color: Colors.lightGreenAccent,
-                        shape: BoxShape.circle
-                      ),
-                    ) : (double.parse(tmp1) != double.parse(tmp2)) ?
-                    Container(
-                      width: 15,
-                      decoration: const BoxDecoration(
-                          color: Colors.redAccent,
-                          shape: BoxShape.circle
-                      ),
-                    ) : Container() : Container(),
-                  ],
-                ),
-              ),
-            ],
-          ),
+  Widget selectCarDesign(_height, _width, car_name) {
+    return Container(
+      width: _width - 40,
+      height: _height / 5,
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: Colors.redAccent,
+          width: 3
         ),
-        (textType == "big") ?
-        const SizedBox(
-          height: 10,
-        ) : Container(),
-        (iconChange == Flag.invisible) ?
-        const Divider(
-          height: 10,
-          color: Colors.black54,
-        ) : Container(),
-      ],
-    ),
-  );
+        borderRadius: const BorderRadius.all(Radius.circular(20))
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          const Icon(
+            Icons.directions_car_filled_rounded,
+            color: Colors.black54,
+            size: 75,
+          ),
+          const SizedBox(height: 15),
+          Text(
+            (car_name != null) ? car_name : "Select Car",
+            style: const TextStyle(
+              color: Colors.black,
+              fontSize: 21,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          const SizedBox(height: 10),
+        ],
+      ),
+    );
+  }
 }
-
 
 class DisplayCar extends StatefulWidget {
   final double height;
@@ -767,39 +663,140 @@ class _DisplayCarState extends State<DisplayCar> {
       ],
     );
   }
-}
 
-Widget selectCarDesign(_height, _width, car_name) {
-  return Container(
-    width: _width - 40,
-    height: _height / 5,
-    decoration: BoxDecoration(
-      border: Border.all(
-        color: Colors.redAccent,
-        width: 3
-      ),
-      borderRadius: const BorderRadius.all(Radius.circular(20))
-    ),
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: <Widget>[
-        const Icon(
-          Icons.directions_car_filled_rounded,
-          color: Colors.black54,
-          size: 75,
-        ),
-        const SizedBox(height: 15),
-        Text(
-          (car_name != null) ? car_name : "Select Car",
-          style: const TextStyle(
-            color: Colors.black,
-            fontSize: 21,
-            fontWeight: FontWeight.w500,
+  Widget displayText(width, title, data1, data2, textType, iconChange, compareType) {
+    String tmp1 = "", tmp2 = "";
+    if(compareType == "num") {
+      tmp1 = data1;
+      tmp2 = data2;
+    }
+    else if(compareType == "value") {
+      tmp1 = data1.substring(0,data1.indexOf(" ")).trim();
+      tmp2 = data2.substring(0,data2.indexOf(" ")).trim();
+    }
+    return Container(
+      color: (textType == "small") ? Colors.black12 : Colors.white,
+      padding: (textType == "small") ? const EdgeInsets.all(10) : EdgeInsets.zero,
+      child: Column(
+        children: <Widget>[
+          (data1 == "") ? Row(
+            children: <Widget>[
+              Expanded(
+                child: (textType == "big") ?
+                Text(
+                  title,
+                  style: const TextStyle(
+                    color: Colors.black54,
+                    fontWeight: FontWeight.w800,
+                    fontSize: 19,
+                  ),
+                ) :
+                Text(
+                  title,
+                  style: const TextStyle(
+                    color: Colors.black54,
+                    fontWeight: FontWeight.w400,
+                    fontSize: 17,
+                  ),
+                ),
+              ),
+              (textType == "big") ?
+              Icon(
+                (iconChange == Flag.invisible) ?
+                Icons.keyboard_arrow_down_rounded :
+                Icons.keyboard_arrow_up_rounded,
+                color: Colors.redAccent,
+              ) : Container(),
+            ],
+          ) :
+          IntrinsicHeight(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Container(
+                  width: width / 2,
+                  padding: const EdgeInsets.only(left: 15, right: 15, top: 11, bottom: 11),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Expanded(
+                        child: Text(
+                          data1,
+                          style: const TextStyle(
+                            color: Colors.black54,
+                            fontWeight: FontWeight.w400,
+                            fontSize: 17,
+                          ),
+                        ),
+                      ),
+                      (compareType == "num" || compareType == "value") ?
+                      (double.parse(tmp1) > double.parse(tmp2)) ?
+                      Container(
+                        width: 13,
+                        decoration: const BoxDecoration(
+                            color: Colors.lightGreenAccent,
+                            shape: BoxShape.circle
+                        ),
+                      ) : (double.parse(tmp1) != double.parse(tmp2)) ?
+                      Container(
+                        width: 13,
+                        decoration: const BoxDecoration(
+                            color: Colors.redAccent,
+                            shape: BoxShape.circle
+                        ),
+                      ) : Container() : Container(),
+                    ],
+                  ),
+                ),
+                const VerticalDivider(width : 0, thickness: 1, color: Colors.black26),
+                Container(
+                  width: width / 2,
+                  padding: const EdgeInsets.only(left: 15, right: 15, top: 11, bottom: 11),
+                  child: Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: Text(
+                          data2,
+                          style: const TextStyle(
+                            color: Colors.black54,
+                            fontWeight: FontWeight.w400,
+                            fontSize: 17,
+                          ),
+                        ),
+                      ),
+                      (compareType == "num" || compareType == "value") ?
+                      (double.parse(tmp1) < double.parse(tmp2)) ?
+                      Container(
+                        width: 15,
+                        decoration: const BoxDecoration(
+                            color: Colors.lightGreenAccent,
+                            shape: BoxShape.circle
+                        ),
+                      ) : (double.parse(tmp1) != double.parse(tmp2)) ?
+                      Container(
+                        width: 15,
+                        decoration: const BoxDecoration(
+                            color: Colors.redAccent,
+                            shape: BoxShape.circle
+                        ),
+                      ) : Container() : Container(),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
-        const SizedBox(height: 10),
-      ],
-    ),
-  );
+          (textType == "big") ?
+          const SizedBox(
+            height: 10,
+          ) : Container(),
+          (iconChange == Flag.invisible) ?
+          const Divider(
+            height: 10,
+            color: Colors.black54,
+          ) : Container(),
+        ],
+      ),
+    );
+  }
 }

@@ -1,10 +1,12 @@
 import 'dart:async';
+import 'dart:ui' as ui;
 import 'package:car_app/model/user_model.dart';
+import 'package:car_app/screens/filter_car_screen.dart';
 import 'package:car_app/screens/search_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter/rendering.dart';
 import 'compare_car_screen.dart';
 import 'login_screen.dart';
 
@@ -24,6 +26,9 @@ class _HomeScreenState extends State<HomeScreen> {
   UserModel loggedInUser = UserModel();
   bool isLoading = false;
   late Timer timer;
+  late double _width;
+  late double _height;
+  final ScrollController scrollController = ScrollController();
 
   fetchUserAndCar() async {
     setState(() {
@@ -45,37 +50,179 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     if(widget.value == "login") {
-      timer = Timer.periodic(const Duration(days: 7), (_) => logout(context));
+      setState(() {
+        timer = Timer.periodic(const Duration(hours: 2), (_) => logout(context));
+      });
     }
     fetchUserAndCar();
   }
 
   @override
   Widget build(BuildContext context) {
+    RenderErrorBox.backgroundColor = Colors.white;
+    RenderErrorBox.textStyle = ui.TextStyle(color: Colors.white);
+    _width = MediaQuery.of(context).size.width;
+    _height = MediaQuery.of(context).size.height;
     return Scaffold(
       key: _scaffoldKey,
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.white,
-        title: const Text(
-          "Cloud Car",
-          style: TextStyle(
-            color: Colors.black,
+      body: SafeArea(
+        child: NestedScrollView(
+          controller: scrollController,
+          headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+            return <Widget>[
+              SliverAppBar(
+                excludeHeaderSemantics: true,
+                backgroundColor: Colors.white,
+                floating: false,
+                pinned: true,
+                snap: false,
+                forceElevated: innerBoxIsScrolled,
+                elevation: 0,
+                bottom: const PreferredSize(
+                  preferredSize: Size(double.infinity, 0),
+                  child: Divider(color: Colors.black26, height: 0, thickness: 2),
+                ),
+                leading: IconButton(
+                  icon: const Icon(Icons.menu_rounded),
+                  color: Colors.black,
+                  onPressed: () {
+                    setState(() {
+                      _scaffoldKey.currentState?.openDrawer();
+                    });
+                  }
+                ),
+                flexibleSpace: LayoutBuilder(
+                  builder: (BuildContext context, BoxConstraints constraints) {
+                    return FlexibleSpaceBar(
+                      collapseMode: CollapseMode.pin,
+                      centerTitle: true,
+                      background: Container(
+                        alignment: Alignment.centerLeft,
+                        padding: const EdgeInsets.only(left: 55),
+                        child: const Text(
+                          "Cloud Car",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 21,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ];
+          },
+          body: Theme(
+            data: Theme.of(context).copyWith(
+                colorScheme: ColorScheme.fromSwatch().copyWith(secondary: Colors.black26)
+            ),
+            child: SingleChildScrollView(
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      const SizedBox(height: 5),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => const SearchScreen("home"))
+                          );
+                        },
+                        child: TextFormField(
+                          enabled: false,
+                          decoration: InputDecoration(
+                            hintText: "Search Car",
+                            fillColor: Colors.black12,
+                            filled: true,
+                            suffixIcon: const Icon(Icons.search_rounded),
+                            contentPadding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 40),
+                      const Text(
+                        "Browse Cars By",
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 21,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      const Divider(
+                        height: 20,
+                        thickness: 2,
+                        indent: 110,
+                        endIndent: 110,
+                        color: Colors.redAccent
+                      ),
+                      const SizedBox(height: 30),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => const FilterCar("Brand"))
+                              );
+                              FocusScope.of(context).unfocus();
+                            },
+                            child: selectCarDesign(_height, _width, "Brand", Icons.star_half_rounded),
+                          ),
+                          const SizedBox(width: 20),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => const FilterCar("Fuel Type"))
+                              );
+                              FocusScope.of(context).unfocus();
+                            },
+                            child: selectCarDesign(_height, _width, "Fuel Type", Icons.local_gas_station_rounded),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 20),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => const FilterCar("Budget"))
+                              );
+                              FocusScope.of(context).unfocus();
+                            },
+                            child: selectCarDesign(_height, _width, "Budget", Icons.local_atm_rounded),
+                          ),
+                          const SizedBox(width: 20),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => const FilterCar("Body Type"))
+                              );
+                              FocusScope.of(context).unfocus();
+                            },
+                            child: selectCarDesign(_height, _width, "Body Type", Icons.directions_car_filled_rounded),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
           ),
         ),
-        leading: IconButton(
-          icon: const Icon(Icons.menu_rounded),
-          onPressed: () => _scaffoldKey.currentState?.openDrawer(),
-        ),
-        systemOverlayStyle: const SystemUiOverlayStyle(
-          // Status bar color
-          statusBarColor: Colors.black87,
-          // Status bar brightness
-          statusBarIconBrightness: Brightness.light, // For Android (dark icons)
-          statusBarBrightness: Brightness.light, // For iOS (dark icons)
-        ),
-        iconTheme: const IconThemeData(color: Colors.black),
       ),
       drawer: Drawer(
         backgroundColor: Colors.white,
@@ -184,30 +331,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 leading: Icon(Icons.notifications_active),
               )
             ),
-            /*InkWell(
-              onTap: (){},
-              child: const ListTile(
-                title: Text('Settings',
-                  style: TextStyle(
-                    fontSize: 18.0,
-                    fontWeight: FontWeight.w500,
-                  )
-                ),
-                leading: Icon(Icons.settings),
-              )
-            ),
-            InkWell(
-              onTap: (){},
-              child: const ListTile(
-                title: Text('About',
-                  style: TextStyle(
-                    fontSize: 18.0,
-                    fontWeight: FontWeight.w500,
-                  )
-                ),
-                leading: Icon(Icons.help),
-              )
-            ),*/
             InkWell(
               onTap: () {
                 logout(context);
@@ -225,42 +348,6 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              const SizedBox(height: 5),
-              GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const SearchScreen("home")
-                    )
-                  );
-                },
-                child: TextFormField(
-                  enabled: false,
-                  decoration: InputDecoration(
-                    hintText: "Search Car",
-                    fillColor: Colors.black12,
-                    filled: true,
-                    suffixIcon: const Icon(Icons.search_rounded),
-                    contentPadding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20),
-            ],
-          ),
-        ),
-      ),
     );
   }
 
@@ -272,5 +359,40 @@ class _HomeScreenState extends State<HomeScreen> {
     await FirebaseAuth.instance.signOut();
     Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (context) => const LoginScreen()));
+  }
+
+  Widget selectCarDesign(_height, _width, title, icon) {
+    return Container(
+      width: _width / 2.5,
+      height: 150,
+      decoration: BoxDecoration(
+          border: Border.all(
+              color: Colors.redAccent,
+              width: 3
+          ),
+          borderRadius: const BorderRadius.all(Radius.circular(15))
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Icon(
+            icon,
+            color: Colors.redAccent,//black54,
+            size: 65,
+          ),
+          const SizedBox(height: 10),
+          Text(
+            title,
+            style: const TextStyle(
+              color: Colors.black,
+              fontSize: 21,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          const SizedBox(height: 10),
+        ],
+      ),
+    );
   }
 }

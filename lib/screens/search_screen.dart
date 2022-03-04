@@ -1,6 +1,6 @@
+import 'dart:ui' as ui;
 import 'package:car_app/model/car_model.dart';
 import 'package:car_app/screens/view_car_screen.dart';
-import 'dart:ui' as ui;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -53,14 +53,14 @@ class _SearchScreenState extends State<SearchScreen> {
                   child: Divider(color: Colors.black26, height: 0, thickness: 2),
                 ),
                 leading: IconButton(
-                    icon: const Icon(
-                      Icons.arrow_back_ios_new_rounded,
-                      color: Colors.black45,
-                    ),
-                    onPressed: () {
-                      //go back button
-                      Navigator.pop(context, [null]);
-                    }
+                  icon: const Icon(
+                    Icons.arrow_back_ios_new_rounded,
+                    color: Colors.black45,
+                  ),
+                  onPressed: () {
+                    //go back button
+                    Navigator.pop(context, [null]);
+                  }
                 ),
                 flexibleSpace: LayoutBuilder(
                   builder: (BuildContext context, BoxConstraints constraints) {
@@ -99,12 +99,12 @@ class _SearchScreenState extends State<SearchScreen> {
                 GestureDetector(
                   onTap: () async {
                     var s = await getCarId(searchCar[i].toString());
-                    if(widget.value == "compare") {
-                      Navigator.pop(context, [searchCar[i].toString()]);
-                    }
-                    else {
+                    if(widget.value == "home") {
                       Navigator.pushReplacement(context,
                           MaterialPageRoute(builder: (context) => ViewCar(s)));
+                    }
+                    else {
+                      Navigator.pop(context, [searchCar[i].toString()]);
                     }
                     FocusScope.of(context).unfocus();
                   },
@@ -150,32 +150,34 @@ class _SearchScreenState extends State<SearchScreen> {
       var tmp = cars.where((item) => item.toLowerCase().contains(value.toString().toLowerCase()));
       Iterator itr = tmp.iterator;
       while(itr.moveNext()) {
-        searchCar.add(itr.current);
+        if(widget.value != itr.current) {
+          searchCar.add(itr.current);
+        }
       }
     }
   }
-}
 
-Widget makeResult(title) {
-  return SingleChildScrollView(
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        const SizedBox(height: 5),
-        Text(
-          title,
-          style: const TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.w400,
-            fontSize: 19,
+  Widget makeResult(title) {
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          const SizedBox(height: 5),
+          Text(
+            title,
+            style: const TextStyle(
+              color: Colors.black,
+              fontWeight: FontWeight.w400,
+              fontSize: 19,
+            ),
           ),
-        ),
-        const SizedBox(height: 18),
-        const Divider(
-          height: 0,
-          thickness: 2,
-        )
-      ],
-    ),
-  );
+          const SizedBox(height: 18),
+          const Divider(
+            height: 0,
+            thickness: 2,
+          )
+        ],
+      ),
+    );
+  }
 }
