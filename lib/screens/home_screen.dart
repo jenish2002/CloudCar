@@ -3,6 +3,7 @@ import 'dart:ui' as ui;
 import 'package:car_app/model/user_model.dart';
 import 'package:car_app/screens/filter_car_screen.dart';
 import 'package:car_app/screens/search_screen.dart';
+import 'package:car_app/screens/upcoming_car_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -296,7 +297,9 @@ class _HomeScreenState extends State<HomeScreen> {
               )
             ),
             InkWell(
-              onTap: (){},
+              onTap: (){
+                Navigator.of(context).pop();
+              },
               child: const ListTile(
                 title: Text('Safest Cars',
                   style: TextStyle(
@@ -308,7 +311,9 @@ class _HomeScreenState extends State<HomeScreen> {
               )
             ),
             InkWell(
-              onTap: (){},
+              onTap: (){
+                Navigator.of(context).pop();
+              },
               child: const ListTile(
                 title: Text('Trending Cars',
                   style: TextStyle(
@@ -320,7 +325,11 @@ class _HomeScreenState extends State<HomeScreen> {
               )
             ),
             InkWell(
-              onTap: (){},
+              onTap: (){
+                Navigator.of(context).pop();
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => const UpcomingCar()));
+              },
               child: const ListTile(
                 title: Text('Upcoming Launch',
                   style: TextStyle(

@@ -187,12 +187,12 @@ class _FilterCarState extends State<FilterCar> {
                                     Row(
                                       children: <Widget>[
                                         SizedBox(
-                                          width: _width/2.22,
+                                          width: _width/2.3,
                                           child: displayCheckbox(carBrands[i], checkedBrand.values.elementAt(i), "brand"),
                                         ),
                                         ((i + 1) < carBrands.length) ?
                                         SizedBox(
-                                          width: _width/2.22,
+                                          width: _width/2.3,
                                           child: displayCheckbox(carBrands[i+1], checkedBrand.values.elementAt(i+1), "brand"),
                                         ) : Container(),
                                       ],
@@ -231,12 +231,12 @@ class _FilterCarState extends State<FilterCar> {
                                     Row(
                                       children: <Widget>[
                                         SizedBox(
-                                          width: _width/2.22,
+                                          width: _width/2.3,
                                           child: displayCheckbox(checkedFuel.keys.elementAt(i), checkedFuel.values.elementAt(i), "fuel"),
                                         ),
                                         ((i + 1) < checkedFuel.length) ?
                                         SizedBox(
-                                          width: _width/2.22,
+                                          width: _width/2.3,
                                           child: displayCheckbox(checkedFuel.keys.elementAt(i+1), checkedFuel.values.elementAt(i+1), "fuel"),
                                         ) : Container(),
                                       ],

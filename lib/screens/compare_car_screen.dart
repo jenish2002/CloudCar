@@ -241,7 +241,7 @@ class _CompareCarScreenState extends State<CompareCarScreen>{
   Widget selectCarDesign(_height, _width, car_name) {
     return Container(
       width: _width - 40,
-      height: _height / 5,
+      //height: _height / 5,
       decoration: BoxDecoration(
         border: Border.all(
           color: Colors.redAccent,
