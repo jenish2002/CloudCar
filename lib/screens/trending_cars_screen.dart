@@ -178,11 +178,22 @@ class _TrendingCarState extends State<TrendingCar> {
                                   fontSize: 17,
                                 ),
                               ),
+                              (cars[i].ncapRating!.compareTo("Not Tested") == 0) ?
+                              Text(
+                                cars[i].ncapRating!,
+                                style: const TextStyle(
+                                  color: Colors.black54,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 17,
+                                ),
+                              ) :
                               Row(
                                 mainAxisSize: MainAxisSize.min,
-                                children: List.generate(int.parse(cars[i].ncapRating!), (index) {
-                                  return const Icon(
-                                    Icons.star,
+                                children: List.generate(5, (index) {
+                                  return Icon(
+                                    (index < double.tryParse(cars[i].ncapRating!)!) ?
+                                    ((double.tryParse(cars[i].ncapRating!)! - index.toDouble()) == 0.5) ?
+                                    Icons.star_half : Icons.star : Icons.star_border,
                                     color: Colors.green,
                                   );
                                 }),

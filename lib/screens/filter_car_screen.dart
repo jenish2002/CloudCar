@@ -443,7 +443,7 @@ class _FilterCarState extends State<FilterCar> {
                                         },
                                         child: bodyTypeDisplay("Sedan", 'assets/Sedan.png', checkedBody['Sedan']),
                                       ),
-                                      const SizedBox(width: 20),
+                                      const SizedBox(width: 10),
                                       GestureDetector(
                                         onTap: () {
                                           setState(() {
@@ -453,7 +453,7 @@ class _FilterCarState extends State<FilterCar> {
                                         },
                                         child: bodyTypeDisplay("Hatchback", 'assets/Hatchback.png', checkedBody['Hatchback']),
                                       ),
-                                      const SizedBox(width: 20),
+                                      const SizedBox(width: 10),
                                       GestureDetector(
                                         onTap: () {
                                           setState(() {
@@ -477,7 +477,7 @@ class _FilterCarState extends State<FilterCar> {
                                         },
                                         child: bodyTypeDisplay("SUV", 'assets/SUV.png', checkedBody['SUV']),
                                       ),
-                                      const SizedBox(width: 20),
+                                      const SizedBox(width: 10),
                                       GestureDetector(
                                         onTap: () {
                                           setState(() {
@@ -487,7 +487,7 @@ class _FilterCarState extends State<FilterCar> {
                                         },
                                         child: bodyTypeDisplay("MUV", 'assets/MUV.png', checkedBody['MUV']),
                                       ),
-                                      const SizedBox(width: 20),
+                                      const SizedBox(width: 10),
                                     ],
                                   ),
                                 ],
