@@ -2,7 +2,9 @@ import 'dart:async';
 import 'dart:ui' as ui;
 import 'package:car_app/model/user_model.dart';
 import 'package:car_app/screens/filter_car_screen.dart';
+import 'package:car_app/screens/safest_car_screen.dart';
 import 'package:car_app/screens/search_screen.dart';
+import 'package:car_app/screens/trending_cars_screen.dart';
 import 'package:car_app/screens/upcoming_car_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -299,6 +301,8 @@ class _HomeScreenState extends State<HomeScreen> {
             InkWell(
               onTap: (){
                 Navigator.of(context).pop();
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => const SafestCar()));
               },
               child: const ListTile(
                 title: Text('Safest Cars',
@@ -313,6 +317,8 @@ class _HomeScreenState extends State<HomeScreen> {
             InkWell(
               onTap: (){
                 Navigator.of(context).pop();
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => const TrendingCar()));
               },
               child: const ListTile(
                 title: Text('Trending Cars',

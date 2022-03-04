@@ -21,8 +21,7 @@ class ViewCar extends StatefulWidget {
 class _ViewCarState extends State<ViewCar> {
 
   String? carName;
-  String? price;
-  String? image;
+  double? safetyRating;
   final ScrollController scrollController = ScrollController();
   bool isLoading = true;
   late double _height;
@@ -42,9 +41,13 @@ class _ViewCarState extends State<ViewCar> {
       .where("carId", isEqualTo: widget.value).get().then((val) async {
       carModel = CarModel.fromJson(val.docs[0].data());
       carName = carModel.brand! + " " + carModel.name! + " " + carModel.variant!;
-      //price with inr symbol
-      price = '\u{20B9} ' + carModel.price!;
-      image = carModel.image!;
+      var nr = carModel.ncapRating!;
+      if(nr.compareTo("Not Tested") == 0) {
+        safetyRating = 0;
+      }
+      else {
+        safetyRating = double.parse(nr);
+      }
       setState(() {
         isLoading = false;
       });
@@ -98,7 +101,7 @@ class _ViewCarState extends State<ViewCar> {
                       background: SizedBox(
                         height: 200,
                         child: Image.network(
-                          image!,
+                          carModel.image!,
                           loadingBuilder: (context, child, loadingProgress) {
                             if(loadingProgress == null) return child;
                             return const Center(child: CircularProgressIndicator());
@@ -137,13 +140,28 @@ class _ViewCarState extends State<ViewCar> {
                     ),
                     const SizedBox(height: 15),
                     Text(
-                      price!,
+                      //price with inr symbol
+                      '\u{20B9} ' + carModel.price!,
                       style: const TextStyle(
                         color: Colors.black,
                         fontWeight: FontWeight.w600,
                         fontSize: 22,
                       ),
                     ),
+                    (carModel.ncapRating!.compareTo("Not Tested") != 0) ?
+                    const SizedBox(height: 10) : Container(),
+                    (carModel.ncapRating!.compareTo("Not Tested") != 0) ?
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: List.generate(5, (index) {
+                        return Icon(
+                          index < safetyRating! ?
+                          ((safetyRating! - index.toDouble()) == 0.5) ? Icons.star_half :
+                          Icons.star : Icons.star_border,
+                          color: Colors.green,
+                        );
+                      }),
+                    ) : Container(),
                     const SizedBox(height: 25),
                     const ReturnText(title: "Overview", data: "",
                         textType: "big", iconChange: Flag.invisible),
@@ -180,7 +198,7 @@ class _ViewCarState extends State<ViewCar> {
                         children: <Widget>[
                           ReturnText(title: "Airbags", data: carModel.airbags!,
                               textType: "", iconChange: safety),
-                          ReturnText(title: "NCAP Rating", data: carModel.airbags!,
+                          ReturnText(title: "NCAP Rating", data: carModel.ncapRating!,
                               textType: "", iconChange: safety),
                         ],
                       ),

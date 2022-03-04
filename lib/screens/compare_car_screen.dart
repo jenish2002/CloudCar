@@ -137,7 +137,7 @@ class _CompareCarScreenState extends State<CompareCarScreen>{
                         alignment: Alignment.centerLeft,
                         padding: const EdgeInsets.only(left: 55),
                         child: const Text(
-                          "Compare Car",
+                          "Compare Cars",
                           style: TextStyle(
                             color: Colors.black,
                             fontSize: 21,
@@ -241,7 +241,6 @@ class _CompareCarScreenState extends State<CompareCarScreen>{
   Widget selectCarDesign(_height, _width, car_name) {
     return Container(
       width: _width - 40,
-      //height: _height / 5,
       decoration: BoxDecoration(
         border: Border.all(
           color: Colors.redAccent,
@@ -669,6 +668,12 @@ class _DisplayCarState extends State<DisplayCar> {
     if(compareType == "num") {
       tmp1 = data1;
       tmp2 = data2;
+      if(tmp1.compareTo("Not Tested") == 0) {
+        tmp1 = "0";
+      }
+      if(tmp2.compareTo("Not Tested") == 0) {
+        tmp2 = "0";
+      }
     }
     else if(compareType == "value") {
       tmp1 = data1.substring(0,data1.indexOf(" ")).trim();
