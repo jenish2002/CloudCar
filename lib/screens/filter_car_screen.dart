@@ -597,30 +597,24 @@ class _FilterCarState extends State<FilterCar> {
         var tmp = carModel.price?.substring(0, carModel.price?.indexOf(" ")).trim();
         if(_startValue <= double.parse(tmp!) && (_endValue >= double.parse(tmp) || _endValue == 100)) {
           var s = carModel.brand! + " " + carModel.name! + " " + carModel.variant!;
-          //if(b.isEmpty && f.isEmpty && bt.isEmpty) {
-            carIdWithName[carModel.carId!] = s.toString();
-            cars.add(s.toString());
-          //}
-          //else {
-            for (var value in b) {
-              if (carModel.brand?.compareTo(value) == 0) {
-                //carIdWithName[carModel.carId!] = s.toString();
-                tmpb.add(s.toString());
-              }
+          carIdWithName[carModel.carId!] = s.toString();
+          cars.add(s.toString());
+          for (var value in b) {
+            if (carModel.brand?.compareTo(value) == 0) {
+              tmpb.add(s.toString());
             }
-            for (var value in f) {
-              if (carModel.fuelType?.compareTo(value) == 0) {
-                //carIdWithName[carModel.carId!] = s.toString();
-                tmpf.add(s.toString());
-              }
+          }
+          for (var value in f) {
+            if (carModel.fuelType?.compareTo(value) == 0) {
+              tmpf.add(s.toString());
             }
-            for (var value in bt) {
-              if (carModel.bodyType?.compareTo(value) == 0) {
-                //carIdWithName[carModel.carId!] = s.toString();
-                tmpbt.add(s.toString());
-              }
+          }
+          for (var value in bt) {
+            if (carModel.bodyType?.compareTo(value) == 0) {
+              //carIdWithName[carModel.carId!] = s.toString();
+              tmpbt.add(s.toString());
             }
-          //}
+          }
         }
       }
       if(f.isEmpty && bt.isEmpty) {
@@ -639,51 +633,15 @@ class _FilterCarState extends State<FilterCar> {
         }
       }
       else {
-        print(cars);
         if(b.isNotEmpty) {
           cars.removeWhere((item) => !tmpb.contains(item));
         }
-        print(cars);
         if(f.isNotEmpty) {
           cars.removeWhere((item) => !tmpf.contains(item));
         }
-        print(cars);
         if(bt.isNotEmpty) {
           cars.removeWhere((item) => !tmpbt.contains(item));
         }
-        print(cars);
-        /*if(tmpb.isEmpty) {
-          cars.clear();
-        }
-        else {
-          for(var a in tmpb) {
-            cars.add(a);
-          }
-        }*/
-        /*if(tmpf.isNotEmpty) {
-          List<String> tmp = [];
-          for(var a in cars) {
-            tmp.add(a);
-          }
-          cars.clear();
-          for(var a in tmpf) {
-            if(tmp.contains(a)) {
-              cars.add(a);
-            }
-          }
-        }
-        if(tmpbt.isNotEmpty) {
-          List<String> tmp = [];
-          for(var a in cars) {
-            tmp.add(a);
-          }
-          cars.clear();
-          for(var a in tmpbt) {
-            if(tmp.contains(a)) {
-              cars.add(a);
-            }
-          }
-        }*/
       }
     });
     setState(() {
