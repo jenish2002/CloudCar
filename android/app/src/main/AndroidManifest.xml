@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.cars.car_app">
    <application
-        android:label="car_app"
+        android:label="Cloud Car"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
