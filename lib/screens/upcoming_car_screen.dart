@@ -120,17 +120,20 @@ class _UpcomingCarState extends State<UpcomingCar> {
               children: <Widget>[
                 FractionallySizedBox(
                   widthFactor: 1,
-                  child: Image.network(
-                    cars[i].image!,
-                    loadingBuilder: (context, child, loadingProgress) {
-                      if(loadingProgress == null) return child;
-                      return const Center(child: CircularProgressIndicator());
-                    },
-                    errorBuilder:(BuildContext context, Object exception,
-                        StackTrace? stackTrace) {
-                      return const Center(child: CircularProgressIndicator());
-                    },
-                    fit: BoxFit.cover,
+                  child: SizedBox(
+                    height: 200,
+                    child: Image.network(
+                      cars[i].image!,
+                      loadingBuilder: (context, child, loadingProgress) {
+                        if(loadingProgress == null) return child;
+                        return const Center(child: CircularProgressIndicator());
+                      },
+                      errorBuilder:(BuildContext context, Object exception,
+                          StackTrace? stackTrace) {
+                        return const Center(child: CircularProgressIndicator());
+                      },
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
                 Container(

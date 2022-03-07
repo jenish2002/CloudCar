@@ -33,27 +33,6 @@ class _ViewCarState extends State<ViewCar> {
   Flag brakesTyres = Flag.invisible;
   CarModel carModel = CarModel();
 
-  getCarDetails() async {
-    setState(() {
-      isLoading = true;
-    });
-    await FirebaseFirestore.instance.collection("cars")
-      .where("carId", isEqualTo: widget.value).get().then((val) async {
-      carModel = CarModel.fromJson(val.docs[0].data());
-      carName = carModel.brand! + " " + carModel.name! + " " + carModel.variant!;
-      var nr = carModel.ncapRating!;
-      if(nr.compareTo("Not Tested") == 0) {
-        safetyRating = 0;
-      }
-      else {
-        safetyRating = double.parse(nr);
-      }
-      setState(() {
-        isLoading = false;
-      });
-    });
-  }
-
   @override
   void initState() {
     super.initState();
@@ -362,6 +341,27 @@ class _ViewCarState extends State<ViewCar> {
         ),
       ),
     );
+  }
+
+  getCarDetails() async {
+    setState(() {
+      isLoading = true;
+    });
+    await FirebaseFirestore.instance.collection("cars")
+        .where("carId", isEqualTo: widget.value).get().then((val) async {
+      carModel = CarModel.fromJson(val.docs[0].data());
+      carName = carModel.brand! + " " + carModel.name! + " " + carModel.variant!;
+      var nr = carModel.ncapRating!;
+      if(nr.compareTo("Not Tested") == 0) {
+        safetyRating = 0;
+      }
+      else {
+        safetyRating = double.parse(nr);
+      }
+    });
+    setState(() {
+      isLoading = false;
+    });
   }
 }
 

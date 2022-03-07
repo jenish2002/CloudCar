@@ -505,11 +505,13 @@ class _FilterCarState extends State<FilterCar> {
                           padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
                           minWidth: _width / 1.3,
                           onPressed: () async {
-                            await initiateSearch();
-                            setState(() {
+                            if(isVisible) {
                               isVisible = false;
-                              scrollController.jumpTo(0);
-                            });
+                              await initiateSearch();
+                              setState(() {
+                                scrollController.jumpTo(0);
+                              });
+                            }
                           },
                           child: const Text("Apply", textAlign: TextAlign.center,
                             style: TextStyle(
@@ -611,37 +613,19 @@ class _FilterCarState extends State<FilterCar> {
           }
           for (var value in bt) {
             if (carModel.bodyType?.compareTo(value) == 0) {
-              //carIdWithName[carModel.carId!] = s.toString();
               tmpbt.add(s.toString());
             }
           }
         }
       }
-      if(f.isEmpty && bt.isEmpty) {
-        for(var a in tmpb) {
-          cars.add(a);
-        }
+      if(b.isNotEmpty) {
+        cars.removeWhere((item) => !tmpb.contains(item));
       }
-      else if(b.isEmpty && bt.isEmpty) {
-        for(var a in tmpf) {
-          cars.add(a);
-        }
+      if(f.isNotEmpty) {
+        cars.removeWhere((item) => !tmpf.contains(item));
       }
-      else if(b.isEmpty && f.isEmpty) {
-        for(var a in tmpbt) {
-          cars.add(a);
-        }
-      }
-      else {
-        if(b.isNotEmpty) {
-          cars.removeWhere((item) => !tmpb.contains(item));
-        }
-        if(f.isNotEmpty) {
-          cars.removeWhere((item) => !tmpf.contains(item));
-        }
-        if(bt.isNotEmpty) {
-          cars.removeWhere((item) => !tmpbt.contains(item));
-        }
+      if(bt.isNotEmpty) {
+        cars.removeWhere((item) => !tmpbt.contains(item));
       }
     });
     setState(() {
