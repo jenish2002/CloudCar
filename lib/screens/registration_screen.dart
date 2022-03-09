@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:car_app/screens/home_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class RegistrationScreen extends StatefulWidget {
   const RegistrationScreen({Key? key}) : super(key: key);
@@ -15,6 +16,8 @@ class RegistrationScreen extends StatefulWidget {
 class _RegistrationScreenState extends State<RegistrationScreen> {
 
   final _auth = FirebaseAuth.instance;
+  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+
   //form key
   final _formKey = GlobalKey<FormState>();
 
@@ -248,6 +251,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   }
 
   void signUp(String email, String password) async {
+    final prefs = await _prefs;
+    DateTime dateTime = DateTime.now();
+    prefs.setString('timer', dateTime.toString());
     if(_formKey.currentState!.validate()) {
       try {
         await _auth.createUserWithEmailAndPassword(email: email, password: password)
@@ -275,7 +281,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
 
     FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
     User? user = _auth.currentUser;
-
     UserModel userModel = UserModel();
 
     //writing all the values
@@ -290,8 +295,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       .set(userModel.toJson());
     Fluttertoast.showToast(msg: "Account created successfully");
 
-    Navigator.pushAndRemoveUntil((context), MaterialPageRoute(builder: (context) => const HomeScreen(value: "login")),
-        (route) => false);
+    Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
+        builder: (context) => const HomeScreen()), (route) => false);
   }
 }
 

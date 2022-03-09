@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:car_app/screens/home_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -21,6 +22,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController passwordController = TextEditingController();
 
   final _auth = FirebaseAuth.instance;
+  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
   @override
   Widget build(BuildContext context) {
@@ -168,13 +170,17 @@ class _LoginScreenState extends State<LoginScreen> {
   
   //login function
   void logIn(String email, String password) async {
+    final prefs = await _prefs;
+    DateTime dateTime = DateTime.now();
+    prefs.setString('timer', dateTime.toString());
+    print(prefs.getString('timer'));
     if(_formKey.currentState!.validate()) {
       try {
         await _auth.signInWithEmailAndPassword(email: email, password: password)
             .then((uid) => {
           Fluttertoast.showToast(msg: "Login successful"),
           Navigator.of(context).pushReplacement(MaterialPageRoute(
-              builder: (context) => const HomeScreen(value: "login"))),
+              builder: (context) => const HomeScreen())),
         });
       } on FirebaseAuthException catch(ex) {
         if(ex.code == 'wrong-password' || ex.code == 'user-not-found') {

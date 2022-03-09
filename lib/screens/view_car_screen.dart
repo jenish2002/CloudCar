@@ -333,6 +333,14 @@ class _ViewCarState extends State<ViewCar> {
                     const SizedBox(height: 20),
                     const ReturnText(title: "Colors", data: "",
                         textType: "big", iconChange: Flag.invisible),
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Container(
+                        padding: const EdgeInsets.all(10),
+                        child: displayColors(),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
                   ],
                 ),
               ),
@@ -340,6 +348,40 @@ class _ViewCarState extends State<ViewCar> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget displayColors() {
+    List<String> colorNames = carModel.colours!.split(',');
+    Map<String, Color> colors = {
+      "black" : Colors.black,
+      "white" : Colors.white,
+      "silver" : Colors.black26,
+      "grey" : Colors.black45,
+      "red" : Colors.red,
+      "blue" : Colors.blue,
+      "lightblue" : Colors.lightBlueAccent,
+      "brown" : Colors.brown,
+      "orange" : Colors.orange,
+    };
+    return Row(
+      children: <Widget>[
+        for(int i = 0; i < colorNames.length; i++)
+        Container(
+          padding: const EdgeInsets.only(right: 20),
+          child: Container(
+            width: 50,
+            height: 50,
+            decoration: BoxDecoration(
+              color: colors[colorNames[i]] ?? Colors.transparent,
+              border: (colorNames[i].compareTo("white") == 0) ?
+                  Border.all(width: 2, color: Colors.black12) :
+                  Border.all(width: 0, color: Colors.transparent),
+              shape: BoxShape.circle,
+            ),
+          ),
+        ),
+      ],
     );
   }
 

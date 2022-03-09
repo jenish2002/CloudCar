@@ -19,8 +19,7 @@ import 'login_screen.dart';
 final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
 class HomeScreen extends StatefulWidget {
-  final String value;
-  const HomeScreen({Key? key, required this.value}) : super(key: key);
+  const HomeScreen({Key? key}) : super(key: key);
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -43,7 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
   late double _height;
   final ScrollController scrollController = ScrollController();
 
-  fetchUserAndCar() async {
+  fetchUser() async {
     setState(() {
       isLoading = true;
     });
@@ -58,12 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    if(widget.value == "login") {
-      setState(() {
-        timer = Timer.periodic(const Duration(hours: 2), (_) => logout(context));
-      });
-    }
-    fetchUserAndCar();
+    fetchUser();
     getCars();
     getUpcomingCars();
   }
@@ -188,7 +182,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 );
                                 FocusScope.of(context).unfocus();
                               },
-                              child: selectCarDesign(_height, _width, "Brand", Icons.star_half_rounded),
+                              child: displayFilter(_height, _width, "Brand", Icons.star_half_rounded),
                             ),
                             const SizedBox(width: 20),
                             GestureDetector(
@@ -198,7 +192,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 );
                                 FocusScope.of(context).unfocus();
                               },
-                              child: selectCarDesign(_height, _width, "Fuel Type", Icons.local_gas_station_rounded),
+                              child: displayFilter(_height, _width, "Fuel Type", Icons.local_gas_station_rounded),
                             ),
                           ],
                         ),
@@ -214,7 +208,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 );
                                 FocusScope.of(context).unfocus();
                               },
-                              child: selectCarDesign(_height, _width, "Budget", Icons.local_atm_rounded),
+                              child: displayFilter(_height, _width, "Budget", Icons.local_atm_rounded),
                             ),
                             const SizedBox(width: 20),
                             GestureDetector(
@@ -224,7 +218,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 );
                                 FocusScope.of(context).unfocus();
                               },
-                              child: selectCarDesign(_height, _width, "Body Type", Icons.directions_car_filled_rounded),
+                              child: displayFilter(_height, _width, "Body Type", Icons.directions_car_filled_rounded),
                             ),
                           ],
                         ),
@@ -468,6 +462,7 @@ class _HomeScreenState extends State<HomeScreen> {
         for(int i = 0; i < upcomingCars.length; i++)
         Container(
           padding: const EdgeInsets.only(right: 10),
+          width: _width/1.57,
           child: Container(
             decoration: BoxDecoration(
                 border: Border.all(width: 2, color: Colors.black12),
@@ -502,6 +497,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     children: <Widget>[
                       Text(
                         upcomingCars[i].name!,
+                        overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
                           color: Colors.black,
                           fontWeight: FontWeight.w600,
@@ -512,6 +508,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       Text(
                         //price with inr symbol
                         "Estimated Price: \u{20B9} " + upcomingCars[i].price!,
+                        overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
                           color: Colors.black54,
                           fontWeight: FontWeight.w500,
@@ -521,6 +518,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       const SizedBox(height: 8),
                       Text(
                         "Expected Date: " + upcomingCars[i].date!,
+                        overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
                           color: Colors.black54,
                           fontWeight: FontWeight.w500,
@@ -530,6 +528,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       const SizedBox(height: 8),
                       Text(
                         "Fuel: " + upcomingCars[i].fuelType!,
+                        overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
                           color: Colors.black54,
                           fontWeight: FontWeight.w500,
@@ -561,6 +560,7 @@ class _HomeScreenState extends State<HomeScreen> {
           },
           child: Container(
             padding: const EdgeInsets.only(right: 10),
+            width: _width/1.57,
             child: Container(
               decoration: BoxDecoration(
                   border: Border.all(width: 2, color: Colors.black12),
@@ -597,6 +597,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           (data.compareTo("safe") == 0) ?
                           safeCars[i].brand! + " " + safeCars[i].name! + " " + safeCars[i].variant! :
                           trendingCars[i].brand! + " " + trendingCars[i].name! + " " + trendingCars[i].variant!,
+                          overflow: TextOverflow.ellipsis,
                           style: const TextStyle(
                             color: Colors.black,
                             fontWeight: FontWeight.w600,
@@ -606,8 +607,10 @@ class _HomeScreenState extends State<HomeScreen> {
                         const SizedBox(height: 12),
                         Text(
                           //price with inr symbol
-                          (data.compareTo("safe") == 0) ? "Price: \u{20B9} " + safeCars[i].price! :
+                          (data.compareTo("safe") == 0) ?
+                          "Price: \u{20B9} " + safeCars[i].price! :
                           "Price: \u{20B9} " + trendingCars[i].price!,
+                          overflow: TextOverflow.ellipsis,
                           style: const TextStyle(
                             color: Colors.black54,
                             fontWeight: FontWeight.w500,
@@ -619,6 +622,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           children: <Widget>[
                             const Text(
                               "Safety: ",
+                              overflow: TextOverflow.ellipsis,
                               style: TextStyle(
                                 color: Colors.black54,
                                 fontWeight: FontWeight.w500,
@@ -640,6 +644,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             (trendingCars[i].ncapRating!.compareTo("Not Tested") == 0) ?
                             Text(
                               trendingCars[i].ncapRating!,
+                              overflow: TextOverflow.ellipsis,
                               style: const TextStyle(
                                 color: Colors.black54,
                                 fontWeight: FontWeight.w500,
@@ -708,15 +713,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
   //logout function
   Future<void> logout(BuildContext context) async {
-    if(widget.value == "login") {
-      timer.cancel();
-    }
     await FirebaseAuth.instance.signOut();
     Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (context) => const LoginScreen()));
   }
 
-  Widget selectCarDesign(_height, _width, title, icon) {
+  Widget displayFilter(_height, _width, title, icon) {
     return Container(
       width: _width / 2.5,
       height: 150,
