@@ -173,7 +173,6 @@ class _LoginScreenState extends State<LoginScreen> {
     final prefs = await _prefs;
     DateTime dateTime = DateTime.now();
     prefs.setString('timer', dateTime.toString());
-    print(prefs.getString('timer'));
     if(_formKey.currentState!.validate()) {
       try {
         await _auth.signInWithEmailAndPassword(email: email, password: password)

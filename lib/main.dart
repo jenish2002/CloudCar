@@ -19,10 +19,14 @@ Future<void> main() async {
 Future<bool> checkTimer() async {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   final prefs = await _prefs;
-  DateTime past = DateTime.parse(prefs.getString('timer')!);
-  DateTime curr = DateTime.now();
-  if(curr.difference(past).inHours >= 2) {
-    return true;
+  if(prefs.containsKey('timer')) {
+    DateTime past = DateTime.parse(prefs.getString('timer')!);
+    DateTime curr = DateTime.now();
+    if (curr
+        .difference(past)
+        .inHours >= 2) {
+      return true;
+    }
   }
   return false;
 }
