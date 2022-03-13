@@ -113,37 +113,36 @@ class _TrendingCarState extends State<TrendingCar> {
                   builder: (context) => ViewCar(cars[i].carId!)));
             },
             child: Container(
-              padding: const EdgeInsets.only(bottom: 10),
+              padding: const EdgeInsets.only(bottom: 7),
               child: Container(
+                padding: const EdgeInsets.only(left: 2, right: 5, top:5, bottom: 5),
                 decoration: BoxDecoration(
                     border: Border.all(width: 3, color: Colors.transparent),
                     color: Colors.white,
                     borderRadius: const BorderRadius.all(Radius.circular(10))
                 ),
-                child: Column(
+                child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    FractionallySizedBox(
-                      widthFactor: 1,
-                      child: SizedBox(
-                        height: 200,
-                        child: Image.network(
-                          cars[i].image!,
-                          loadingBuilder: (context, child, loadingProgress) {
-                            if(loadingProgress == null) return child;
-                            return const Center(child: CircularProgressIndicator());
-                          },
-                          errorBuilder:(BuildContext context, Object exception,
-                              StackTrace? stackTrace) {
-                            return const Center(child: CircularProgressIndicator());
-                          },
-                          fit: BoxFit.cover,
-                        ),
+                    SizedBox(
+                      width: 100,
+                      height: 50,
+                      child: Image.network(
+                        cars[i].image!,
+                        loadingBuilder: (context, child, loadingProgress) {
+                          if(loadingProgress == null) return child;
+                          return const Center(child: CircularProgressIndicator());
+                        },
+                        errorBuilder:(BuildContext context, Object exception,
+                            StackTrace? stackTrace) {
+                          return const Center(child: CircularProgressIndicator());
+                        },
+                        fit: BoxFit.cover,
                       ),
                     ),
-                    Container(
-                      padding: const EdgeInsets.only(left: 10, right: 10, top:13, bottom: 13),
+                    const SizedBox(width: 5),
+                    Expanded(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -152,9 +151,10 @@ class _TrendingCarState extends State<TrendingCar> {
                           Text(
                             cars[i].brand! + " " + cars[i].name! + " " + cars[i].variant!,
                             style: const TextStyle(
+                              overflow: TextOverflow.ellipsis,
                               color: Colors.black,
                               fontWeight: FontWeight.w600,
-                              fontSize: 22,
+                              fontSize: 21,
                             ),
                           ),
                           const SizedBox(height: 12),
@@ -162,6 +162,7 @@ class _TrendingCarState extends State<TrendingCar> {
                             //price with inr symbol
                             "Price: \u{20B9} " + cars[i].price!,
                             style: const TextStyle(
+                              overflow: TextOverflow.ellipsis,
                               color: Colors.black54,
                               fontWeight: FontWeight.w500,
                               fontSize: 17,

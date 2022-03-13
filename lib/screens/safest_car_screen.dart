@@ -17,6 +17,7 @@ class _SafestCarState extends State<SafestCar> {
   List<CarModel> cars = [];
   bool isLoading = true;
   CarModel carModel = CarModel();
+  late double _width;
   final ScrollController scrollController = ScrollController();
 
   @override
@@ -29,6 +30,7 @@ class _SafestCarState extends State<SafestCar> {
   Widget build(BuildContext context) {
     RenderErrorBox.backgroundColor = Colors.white;
     RenderErrorBox.textStyle = ui.TextStyle(color: Colors.white);
+    _width = MediaQuery.of(context).size.width;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -92,7 +94,8 @@ class _SafestCarState extends State<SafestCar> {
               child: (isLoading) ? const Center(child: CircularProgressIndicator()) :
               SingleChildScrollView(
                 child: Container(
-                  padding: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(7),
+                  width: _width,
                   child: displayCars(),
                 ),
               ),
@@ -113,37 +116,36 @@ class _SafestCarState extends State<SafestCar> {
                 builder: (context) => ViewCar(cars[i].carId!)));
           },
           child: Container(
-            padding: const EdgeInsets.only(bottom: 10),
+            padding: const EdgeInsets.only(bottom: 7),
             child: Container(
+              padding: const EdgeInsets.only(left: 2, right: 5, top:5, bottom: 5),
               decoration: BoxDecoration(
                   border: Border.all(width: 3, color: Colors.transparent),
                   color: Colors.white,
                   borderRadius: const BorderRadius.all(Radius.circular(10))
               ),
-              child: Column(
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  FractionallySizedBox(
-                    widthFactor: 1,
-                    child: SizedBox(
-                      height: 200,
-                      child: Image.network(
-                        cars[i].image!,
-                        loadingBuilder: (context, child, loadingProgress) {
-                          if(loadingProgress == null) return child;
-                          return const Center(child: CircularProgressIndicator());
-                        },
-                        errorBuilder:(BuildContext context, Object exception,
-                            StackTrace? stackTrace) {
-                          return const Center(child: CircularProgressIndicator());
-                        },
-                        fit: BoxFit.cover,
-                      ),
+                  SizedBox(
+                    width: 100,
+                    height: 50,
+                    child: Image.network(
+                      cars[i].image!,
+                      loadingBuilder: (context, child, loadingProgress) {
+                        if(loadingProgress == null) return child;
+                        return const Center(child: CircularProgressIndicator());
+                      },
+                      errorBuilder:(BuildContext context, Object exception,
+                          StackTrace? stackTrace) {
+                        return const Center(child: CircularProgressIndicator());
+                      },
+                      fit: BoxFit.cover,
                     ),
                   ),
-                  Container(
-                    padding: const EdgeInsets.only(left: 10, right: 10, top:13, bottom: 13),
+                  const SizedBox(width: 5),
+                  Expanded(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -152,9 +154,10 @@ class _SafestCarState extends State<SafestCar> {
                         Text(
                           cars[i].brand! + " " + cars[i].name! + " " + cars[i].variant!,
                           style: const TextStyle(
+                            overflow: TextOverflow.ellipsis,
                             color: Colors.black,
                             fontWeight: FontWeight.w600,
-                            fontSize: 22,
+                            fontSize: 21,
                           ),
                         ),
                         const SizedBox(height: 12),
@@ -162,6 +165,7 @@ class _SafestCarState extends State<SafestCar> {
                           //price with inr symbol
                           "Price: \u{20B9} " + cars[i].price!,
                           style: const TextStyle(
+                            overflow: TextOverflow.ellipsis,
                             color: Colors.black54,
                             fontWeight: FontWeight.w500,
                             fontSize: 17,

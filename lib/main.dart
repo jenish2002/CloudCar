@@ -22,9 +22,7 @@ Future<bool> checkTimer() async {
   if(prefs.containsKey('timer')) {
     DateTime past = DateTime.parse(prefs.getString('timer')!);
     DateTime curr = DateTime.now();
-    if (curr
-        .difference(past)
-        .inHours >= 2) {
+    if (curr.difference(past).inHours >= 2) {
       return true;
     }
   }

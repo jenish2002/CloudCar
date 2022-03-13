@@ -327,12 +327,14 @@ class _HomeScreenState extends State<HomeScreen> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    GestureDetector(
-                      child: const CircleAvatar(
+                    SizedBox(//GestureDetector(
+                      width: 60,
+                      height: 60,
+                      child: Image.asset('assets/ic_launcher.png'),/*CircleAvatar(
                         backgroundColor: Colors.grey,
                         radius: 30,
-                        child: Icon(Icons.person, color: Colors.white, size: 35),
-                      ),
+                        child: //Icon(Icons.person, color: Colors.white, size: 35),
+                      ),*/
                     ),
                     const SizedBox(width: 20),
                     Column(
@@ -341,6 +343,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       children: <Widget>[
                         Text(isLoading ? "Loading..." : "${loggedInUser.firstName} ${loggedInUser.secondName}",
                           style: const TextStyle(
+                            overflow: TextOverflow.ellipsis,
                             fontSize: 20.0,
                             fontWeight: FontWeight.bold,
                           )
@@ -348,6 +351,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         const SizedBox(height: 5),
                         Text(isLoading ? "Loading..." : "${loggedInUser.email}",
                             style: const TextStyle(
+                              overflow: TextOverflow.ellipsis,
                               fontSize: 16.0,
                               fontWeight: FontWeight.w400,
                             )
@@ -359,18 +363,6 @@ class _HomeScreenState extends State<HomeScreen> {
               )
             ),
             const Divider(thickness: 1, indent: 10, endIndent: 10, color: Colors.black38),
-            InkWell(
-              onTap: () => Navigator.of(context).pop(),
-              child: const ListTile(
-                title: Text('Search Car',
-                  style: TextStyle(
-                    fontSize: 18.0,
-                    fontWeight: FontWeight.w500,
-                  )
-                ),
-              leading: Icon(Icons.search_rounded),
-              )
-            ),
             InkWell(
               onTap: () {
                 Navigator.of(context).pop();

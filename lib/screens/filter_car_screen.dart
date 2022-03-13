@@ -38,7 +38,7 @@ class _FilterCarState extends State<FilterCar> {
   double _startValue = 1;
   double _endValue = 100;
   Map<String,bool> checkedBrand = {};
-  Map<String,bool> checkedFuel = {'Petrol' : false, 'Diesel' : false, 'CNG' : false, 'Electric' : false};
+  Map<String,bool> checkedFuel = {'Petrol' : false, 'Diesel' : false, 'CNG' : false};
   Map<String,bool> checkedBody = {'Sedan' : false, 'Hatchback' : false, 'Coupe' : false, 'SUV' : false, 'MUV' : false};
 
   @override
