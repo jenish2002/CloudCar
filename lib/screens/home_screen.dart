@@ -3,6 +3,7 @@ import 'dart:ui' as ui;
 import 'package:car_app/model/car_model.dart';
 import 'package:car_app/model/upcoming_model.dart';
 import 'package:car_app/model/user_model.dart';
+import 'package:car_app/screens/advanced_search_screen.dart';
 import 'package:car_app/screens/filter_car_screen.dart';
 import 'package:car_app/screens/safest_car_screen.dart';
 import 'package:car_app/screens/search_screen.dart';
@@ -139,6 +140,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             Navigator.of(context).push(MaterialPageRoute(
                                 builder: (context) => const SearchScreen("home"))
                             );
+                            FocusScope.of(context).unfocus();
                           },
                           child: TextFormField(
                             enabled: false,
@@ -154,23 +156,32 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                         ),
-                        const SizedBox(height: 40),
-                        const Text(
-                          "Browse Cars By",
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 21,
-                            fontWeight: FontWeight.w500,
+                        const SizedBox(height: 15),
+                        SizedBox(
+                          width: _width / 1.15,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: <Widget>[
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (context) => const AdvancedSearch("Fuel Type"))
+                                  );
+                                  FocusScope.of(context).unfocus();
+                                },
+                                child: const Text(
+                                  "Advanced Search",
+                                  style: TextStyle(
+                                    color: Colors.redAccent,
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                        const Divider(
-                            height: 20,
-                            thickness: 2,
-                            indent: 110,
-                            endIndent: 110,
-                            color: Colors.redAccent
-                        ),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 40),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -182,7 +193,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 );
                                 FocusScope.of(context).unfocus();
                               },
-                              child: displayFilter(_height, _width, "Brand", Icons.star_half_rounded),
+                              child: displayFilter(_height, _width, "Brand", 'assets/brand.png', 35.0, 35.0),
                             ),
                             const SizedBox(width: 20),
                             GestureDetector(
@@ -192,7 +203,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 );
                                 FocusScope.of(context).unfocus();
                               },
-                              child: displayFilter(_height, _width, "Fuel Type", Icons.local_gas_station_rounded),
+                              child: displayFilter(_height, _width, "Fuel Type", 'assets/fuel_type.png', 30.0, 30.0),
                             ),
                           ],
                         ),
@@ -208,7 +219,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 );
                                 FocusScope.of(context).unfocus();
                               },
-                              child: displayFilter(_height, _width, "Budget", Icons.local_atm_rounded),
+                              child: displayFilter(_height, _width, "Budget", 'assets/budget.png', 35.0, 35.0),
                             ),
                             const SizedBox(width: 20),
                             GestureDetector(
@@ -218,18 +229,18 @@ class _HomeScreenState extends State<HomeScreen> {
                                 );
                                 FocusScope.of(context).unfocus();
                               },
-                              child: displayFilter(_height, _width, "Body Type", Icons.directions_car_filled_rounded),
+                              child: displayFilter(_height, _width, "Body Type", 'assets/body_type.png', 30.0, 30.0),
                             ),
                           ],
                         ),
                       ],
                     ),
                   ),
-                  (isVisibleUpcomingCar) ? Column(
+                  (isVisibleCar) ? Column(
                     children: <Widget>[
                       const SizedBox(height: 25),
                       const Text(
-                        "Upcoming Launches",
+                        "Trending Cars",
                         style: TextStyle(
                           color: Colors.black,
                           fontSize: 21,
@@ -239,8 +250,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       const Divider(
                           height: 20,
                           thickness: 2,
-                          indent: 108,
-                          endIndent: 108,
+                          indent: 138,
+                          endIndent: 138,
                           color: Colors.redAccent
                       ),
                       const SizedBox(height: 5),
@@ -248,7 +259,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         scrollDirection: Axis.horizontal,
                         child: Container(
                           padding: const EdgeInsets.all(10),
-                          child: displayUpcomingCars(),
+                          child: displayCars("trending"),
                         ),
                       ),
                     ],
@@ -281,11 +292,11 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ],
                   ) : Container(),
-                  (isVisibleCar) ? Column(
+                  (isVisibleUpcomingCar) ? Column(
                     children: <Widget>[
                       const SizedBox(height: 25),
                       const Text(
-                        "Trending Cars",
+                        "Upcoming Launches",
                         style: TextStyle(
                           color: Colors.black,
                           fontSize: 21,
@@ -295,8 +306,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       const Divider(
                           height: 20,
                           thickness: 2,
-                          indent: 138,
-                          endIndent: 138,
+                          indent: 108,
+                          endIndent: 108,
                           color: Colors.redAccent
                       ),
                       const SizedBox(height: 5),
@@ -304,7 +315,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         scrollDirection: Axis.horizontal,
                         child: Container(
                           padding: const EdgeInsets.all(10),
-                          child: displayCars("trending"),
+                          child: displayUpcomingCars(),
                         ),
                       ),
                       const SizedBox(height: 10),
@@ -327,14 +338,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    SizedBox(//GestureDetector(
+                    SizedBox(
                       width: 60,
                       height: 60,
-                      child: Image.asset('assets/ic_launcher.png'),/*CircleAvatar(
-                        backgroundColor: Colors.grey,
-                        radius: 30,
-                        child: //Icon(Icons.person, color: Colors.white, size: 35),
-                      ),*/
+                      child: Image.asset('assets/ic_launcher.png'),
                     ),
                     const SizedBox(width: 20),
                     Column(
@@ -710,36 +717,29 @@ class _HomeScreenState extends State<HomeScreen> {
         MaterialPageRoute(builder: (context) => const LoginScreen()));
   }
 
-  Widget displayFilter(_height, _width, title, icon) {
+  Widget displayFilter(_height, _width, title, icon, iconWidth, iconHeight) {
     return Container(
-      width: _width / 2.5,
-      height: 150,
+      width: _width / 2.4,
+      height: 65,
+      padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-          border: Border.all(
-              color: Colors.redAccent,
-              width: 3
-          ),
-          borderRadius: const BorderRadius.all(Radius.circular(15))
+          color: Colors.white,
+          border: Border.all(width: 2, color: Colors.redAccent),
+          borderRadius: const BorderRadius.all(Radius.circular(10))
       ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+      child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          Icon(
-            icon,
-            color: Colors.redAccent,//black54,
-            size: 65,
-          ),
-          const SizedBox(height: 10),
+          Image.asset(icon, width: iconWidth, height: iconHeight),
+          const SizedBox(width: 15),
           Text(
             title,
             style: const TextStyle(
               color: Colors.black,
-              fontSize: 21,
+              fontSize: 18,
               fontWeight: FontWeight.w500,
             ),
           ),
-          const SizedBox(height: 10),
         ],
       ),
     );
