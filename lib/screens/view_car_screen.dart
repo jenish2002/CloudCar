@@ -55,7 +55,7 @@ class _ViewCarState extends State<ViewCar> {
             return <Widget>[
               SliverAppBar(
                 excludeHeaderSemantics: true,
-                expandedHeight: _height / 3.0,
+                expandedHeight: _height / 4.0,
                 backgroundColor: Colors.transparent,
                 floating: false,
                 pinned: false,
@@ -78,7 +78,6 @@ class _ViewCarState extends State<ViewCar> {
                       collapseMode: CollapseMode.pin,
                       centerTitle: true,
                       background: SizedBox(
-                        height: 200,
                         child: Image.network(
                           carModel.image!,
                           loadingBuilder: (context, child, loadingProgress) {

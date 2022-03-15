@@ -442,6 +442,7 @@ class _AdvancedSearchState extends State<AdvancedSearch> {
                                     const SizedBox(height: 10),
                                     Row(
                                       children: <Widget>[
+                                        const Expanded(child: SizedBox(),),
                                         GestureDetector(
                                           onTap: () {
                                             setState(() {
@@ -451,7 +452,7 @@ class _AdvancedSearchState extends State<AdvancedSearch> {
                                           },
                                           child: bodyTypeDisplay("Sedan", 'assets/Sedan.png', checkedBody['Sedan']),
                                         ),
-                                        const SizedBox(width: 10),
+                                        const Expanded(child: SizedBox(),),
                                         GestureDetector(
                                           onTap: () {
                                             setState(() {
@@ -461,7 +462,8 @@ class _AdvancedSearchState extends State<AdvancedSearch> {
                                           },
                                           child: bodyTypeDisplay("Hatchback", 'assets/Hatchback.png', checkedBody['Hatchback']),
                                         ),
-                                        const SizedBox(width: 10),
+                                        //const SizedBox(width: 10),
+                                        const Expanded(child: SizedBox(),),
                                         GestureDetector(
                                           onTap: () {
                                             setState(() {
@@ -471,11 +473,15 @@ class _AdvancedSearchState extends State<AdvancedSearch> {
                                           },
                                           child: bodyTypeDisplay("Coupe", 'assets/Coupe.png', checkedBody['Coupe']),
                                         ),
+                                        const Expanded(child: SizedBox(),),
                                       ],
                                     ),
                                     const SizedBox(height: 20),
                                     Row(
+                                      //mainAxisAlignment: MainAxisAlignment.center,
                                       children: <Widget>[
+                                        const Expanded(child: SizedBox(),),
+                                        //const SizedBox(width: 10),
                                         GestureDetector(
                                           onTap: () {
                                             setState(() {
@@ -485,7 +491,7 @@ class _AdvancedSearchState extends State<AdvancedSearch> {
                                           },
                                           child: bodyTypeDisplay("SUV", 'assets/SUV.png', checkedBody['SUV']),
                                         ),
-                                        const SizedBox(width: 10),
+                                        const Expanded(child: SizedBox(),),
                                         GestureDetector(
                                           onTap: () {
                                             setState(() {
@@ -495,9 +501,15 @@ class _AdvancedSearchState extends State<AdvancedSearch> {
                                           },
                                           child: bodyTypeDisplay("MUV", 'assets/MUV.png', checkedBody['MUV']),
                                         ),
-                                        const SizedBox(width: 10),
+                                        const Expanded(child: SizedBox(),),
+                                        SizedBox(
+                                          width: _width / 3.8,
+                                          height: 70,
+                                        ),
+                                        const Expanded(child: SizedBox(),),
                                       ],
                                     ),
+                                    const SizedBox(height: 10),
                                   ],
                                 ),
                               ) : Container(),

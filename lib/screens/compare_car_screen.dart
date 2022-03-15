@@ -159,20 +159,26 @@ class _CompareCarScreenState extends State<CompareCarScreen>{
               child: Column(
                 children: <Widget>[
                   Padding(
-                    padding: (isVisible) ? const EdgeInsets.only(left: 5, top: 10, right: 5, bottom: 5) :
+                    padding: (isVisible) ? const EdgeInsets.only(left: 20, top: 10, right: 20, bottom: 5) :
                       EdgeInsets.zero,
                     child: (isVisible) ? Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
                         const SizedBox(height: 20),
-                        GestureDetector(
-                          onTap: () {
-                            clicked = 1;
-                            _navigateNextPageAndRetriveValue(context);
-                            FocusScope.of(context).unfocus();
-                          },
-                          child: selectCarDesign(_height, _width, carname1),
+                        Row(
+                          children: <Widget>[
+                            Expanded(
+                              child: GestureDetector(
+                                onTap: () {
+                                  clicked = 1;
+                                  _navigateNextPageAndRetriveValue(context);
+                                  FocusScope.of(context).unfocus();
+                                },
+                                child: selectCarDesign(_height, _width, carname1),
+                              ),
+                            ),
+                          ],
                         ),
                         const SizedBox(height: 25),
                         const Text(
@@ -184,44 +190,55 @@ class _CompareCarScreenState extends State<CompareCarScreen>{
                           ),
                         ),
                         const SizedBox(height: 25),
-                        GestureDetector(
-                          onTap: () {
-                            clicked = 2;
-                            _navigateNextPageAndRetriveValue(context);
-                            FocusScope.of(context).unfocus();
-                          },
-                          child: selectCarDesign(_height, _width, carname2),
-                        ),
-                        const SizedBox(height: 60),
-                        Material(
-                          elevation: 5,
-                          borderRadius: BorderRadius.circular(25),
-                          color: Colors.redAccent,
-                          child: MaterialButton(
-                            padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
-                            minWidth: _width - 50,
-                            onPressed: () async {
-                              if(carname1 != null && carname2 != null) {
-                                await getCarDetails(carname1);
-                                carModel1 = carModel;
-                                await getCarDetails(carname2);
-                                carModel2 = carModel;
-                                setState(() {
-                                  isVisible = false;
-                                });
-                              }
-                              else {
-                                Fluttertoast.showToast(msg: "Select cars to compare");
-                              }
-                            },
-                            child: const Text("Compare Cars", textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  fontSize: 20,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold
+                        Row(
+                          children: <Widget>[
+                            Expanded(
+                              child: GestureDetector(
+                                onTap: () {
+                                  clicked = 2;
+                                  _navigateNextPageAndRetriveValue(context);
+                                  FocusScope.of(context).unfocus();
+                                },
+                                child: selectCarDesign(_height, _width, carname2),
                               ),
                             ),
-                          ),
+                          ],
+                        ),
+                        const SizedBox(height: 60),
+                        Row(
+                          children: <Widget>[
+                            Expanded(
+                              child: Material(
+                                elevation: 5,
+                                borderRadius: BorderRadius.circular(25),
+                                color: Colors.redAccent,
+                                child: MaterialButton(
+                                  padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
+                                  onPressed: () async {
+                                    if(carname1 != null && carname2 != null) {
+                                      await getCarDetails(carname1);
+                                      carModel1 = carModel;
+                                      await getCarDetails(carname2);
+                                      carModel2 = carModel;
+                                      setState(() {
+                                        isVisible = false;
+                                      });
+                                    }
+                                    else {
+                                      Fluttertoast.showToast(msg: "Select cars to compare");
+                                    }
+                                  },
+                                  child: const Text("Compare Cars", textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ) :
@@ -240,7 +257,7 @@ class _CompareCarScreenState extends State<CompareCarScreen>{
 
   Widget selectCarDesign(_height, _width, car_name) {
     return Container(
-      width: _width - 40,
+      //width: _width - 40,
       decoration: BoxDecoration(
         border: Border.all(
           color: Colors.redAccent,
@@ -311,8 +328,7 @@ class _DisplayCarState extends State<DisplayCar> {
                   children: <Widget>[
                     const SizedBox(height: 5),
                     SizedBox(
-                      height: 130,
-                      width: widget.width / 2.2,
+                      height: 150,
                       child: Image.network(
                         widget.carModel1.image!,
                         loadingBuilder: (context, child, loadingProgress) {
@@ -332,7 +348,7 @@ class _DisplayCarState extends State<DisplayCar> {
                       style: const TextStyle(
                         color: Colors.black,
                         fontWeight: FontWeight.w600,
-                        fontSize: 19,
+                        fontSize: 16,
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
@@ -342,7 +358,7 @@ class _DisplayCarState extends State<DisplayCar> {
                       style: const TextStyle(
                         color: Colors.black45,
                         fontWeight: FontWeight.w500,
-                        fontSize: 15,
+                        fontSize: 14,
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
@@ -352,7 +368,7 @@ class _DisplayCarState extends State<DisplayCar> {
                       style: const TextStyle(
                         color: Colors.black,
                         fontWeight: FontWeight.w500,
-                        fontSize: 17,
+                        fontSize: 14,
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
@@ -368,8 +384,7 @@ class _DisplayCarState extends State<DisplayCar> {
                   children: <Widget>[
                     const SizedBox(height: 5),
                     SizedBox(
-                      height: 130,
-                      width: widget.width / 2.2,
+                      height: 150,
                       child: Image.network(
                         widget.carModel2.image!,
                         loadingBuilder: (context, child, loadingProgress) {
@@ -389,7 +404,7 @@ class _DisplayCarState extends State<DisplayCar> {
                       style: const TextStyle(
                         color: Colors.black,
                         fontWeight: FontWeight.w600,
-                        fontSize: 19,
+                        fontSize: 16,
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
@@ -399,7 +414,7 @@ class _DisplayCarState extends State<DisplayCar> {
                       style: const TextStyle(
                         color: Colors.black45,
                         fontWeight: FontWeight.w500,
-                        fontSize: 15,
+                        fontSize: 14,
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
@@ -409,7 +424,7 @@ class _DisplayCarState extends State<DisplayCar> {
                       style: const TextStyle(
                         color: Colors.black,
                         fontWeight: FontWeight.w500,
-                        fontSize: 17,
+                        fontSize: 14,
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
@@ -718,74 +733,78 @@ class _DisplayCarState extends State<DisplayCar> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Container(
-                  width: width / 2,
-                  padding: const EdgeInsets.only(left: 15, right: 15, top: 11, bottom: 11),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Expanded(
-                        child: Text(
-                          data1,
-                          style: const TextStyle(
-                            color: Colors.black54,
-                            fontWeight: FontWeight.w400,
-                            fontSize: 17,
+                Expanded(
+                  child: Container(
+                    width: width / 2,
+                    padding: const EdgeInsets.only(left: 15, right: 15, top: 11, bottom: 11),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Expanded(
+                          child: Text(
+                            data1,
+                            style: const TextStyle(
+                              color: Colors.black54,
+                              fontWeight: FontWeight.w400,
+                              fontSize: 17,
+                            ),
                           ),
                         ),
-                      ),
-                      (compareType == "num" || compareType == "value") ?
-                      (double.parse(tmp1) > double.parse(tmp2)) ?
-                      Container(
-                        width: 13,
-                        decoration: const BoxDecoration(
-                            color: Colors.lightGreenAccent,
-                            shape: BoxShape.circle
-                        ),
-                      ) : (double.parse(tmp1) != double.parse(tmp2)) ?
-                      Container(
-                        width: 13,
-                        decoration: const BoxDecoration(
-                            color: Colors.redAccent,
-                            shape: BoxShape.circle
-                        ),
-                      ) : Container() : Container(),
-                    ],
+                        (compareType == "num" || compareType == "value") ?
+                        (double.parse(tmp1) > double.parse(tmp2)) ?
+                        Container(
+                          width: 13,
+                          decoration: const BoxDecoration(
+                              color: Colors.lightGreenAccent,
+                              shape: BoxShape.circle
+                          ),
+                        ) : (double.parse(tmp1) != double.parse(tmp2)) ?
+                        Container(
+                          width: 13,
+                          decoration: const BoxDecoration(
+                              color: Colors.redAccent,
+                              shape: BoxShape.circle
+                          ),
+                        ) : Container() : Container(),
+                      ],
+                    ),
                   ),
                 ),
                 const VerticalDivider(width : 0, thickness: 1, color: Colors.black26),
-                Container(
-                  width: width / 2,
-                  padding: const EdgeInsets.only(left: 15, right: 15, top: 11, bottom: 11),
-                  child: Row(
-                    children: <Widget>[
-                      Expanded(
-                        child: Text(
-                          data2,
-                          style: const TextStyle(
-                            color: Colors.black54,
-                            fontWeight: FontWeight.w400,
-                            fontSize: 17,
+                Expanded(
+                  child: Container(
+                    width: width / 2,
+                    padding: const EdgeInsets.only(left: 15, right: 15, top: 11, bottom: 11),
+                    child: Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: Text(
+                            data2,
+                            style: const TextStyle(
+                              color: Colors.black54,
+                              fontWeight: FontWeight.w400,
+                              fontSize: 17,
+                            ),
                           ),
                         ),
-                      ),
-                      (compareType == "num" || compareType == "value") ?
-                      (double.parse(tmp1) < double.parse(tmp2)) ?
-                      Container(
-                        width: 15,
-                        decoration: const BoxDecoration(
-                            color: Colors.lightGreenAccent,
-                            shape: BoxShape.circle
-                        ),
-                      ) : (double.parse(tmp1) != double.parse(tmp2)) ?
-                      Container(
-                        width: 15,
-                        decoration: const BoxDecoration(
-                            color: Colors.redAccent,
-                            shape: BoxShape.circle
-                        ),
-                      ) : Container() : Container(),
-                    ],
+                        (compareType == "num" || compareType == "value") ?
+                        (double.parse(tmp1) < double.parse(tmp2)) ?
+                        Container(
+                          width: 15,
+                          decoration: const BoxDecoration(
+                              color: Colors.lightGreenAccent,
+                              shape: BoxShape.circle
+                          ),
+                        ) : (double.parse(tmp1) != double.parse(tmp2)) ?
+                        Container(
+                          width: 15,
+                          decoration: const BoxDecoration(
+                              color: Colors.redAccent,
+                              shape: BoxShape.circle
+                          ),
+                        ) : Container() : Container(),
+                      ],
+                    ),
                   ),
                 ),
               ],

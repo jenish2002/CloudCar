@@ -186,24 +186,28 @@ class _HomeScreenState extends State<HomeScreen> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: <Widget>[
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) => const FilterCar("Brand"))
-                                );
-                                FocusScope.of(context).unfocus();
-                              },
-                              child: displayFilter(_height, _width, "Brand", 'assets/brand.png', 35.0, 35.0),
+                            Expanded(
+                              child: GestureDetector(
+                                onTap: () {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (context) => const FilterCar("Brand"))
+                                  );
+                                  FocusScope.of(context).unfocus();
+                                },
+                                child: displayFilter(_height, _width, "Brand", 'assets/brand.png', 35.0, 35.0),
+                              ),
                             ),
                             const SizedBox(width: 20),
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) => const FilterCar("Fuel Type"))
-                                );
-                                FocusScope.of(context).unfocus();
-                              },
-                              child: displayFilter(_height, _width, "Fuel Type", 'assets/fuel_type.png', 30.0, 30.0),
+                            Expanded(
+                              child: GestureDetector(
+                                onTap: () {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (context) => const FilterCar("Fuel Type"))
+                                  );
+                                  FocusScope.of(context).unfocus();
+                                },
+                                child: displayFilter(_height, _width, "Fuel Type", 'assets/fuel_type.png', 30.0, 30.0),
+                              ),
                             ),
                           ],
                         ),
@@ -212,24 +216,28 @@ class _HomeScreenState extends State<HomeScreen> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: <Widget>[
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) => const FilterCar("Budget"))
-                                );
-                                FocusScope.of(context).unfocus();
-                              },
-                              child: displayFilter(_height, _width, "Budget", 'assets/budget.png', 35.0, 35.0),
+                            Expanded(
+                              child: GestureDetector(
+                                onTap: () {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (context) => const FilterCar("Budget"))
+                                  );
+                                  FocusScope.of(context).unfocus();
+                                },
+                                child: displayFilter(_height, _width, "Budget", 'assets/budget.png', 35.0, 35.0),
+                              ),
                             ),
                             const SizedBox(width: 20),
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) => const FilterCar("Body Type"))
-                                );
-                                FocusScope.of(context).unfocus();
-                              },
-                              child: displayFilter(_height, _width, "Body Type", 'assets/body_type.png', 30.0, 30.0),
+                            Expanded(
+                              child: GestureDetector(
+                                onTap: () {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (context) => const FilterCar("Body Type"))
+                                  );
+                                  FocusScope.of(context).unfocus();
+                                },
+                                child: displayFilter(_height, _width, "Body Type", 'assets/body_type.png', 30.0, 30.0),
+                              ),
                             ),
                           ],
                         ),
@@ -247,12 +255,13 @@ class _HomeScreenState extends State<HomeScreen> {
                           fontWeight: FontWeight.w500,
                         ),
                       ),
-                      const Divider(
-                          height: 20,
-                          thickness: 2,
-                          indent: 138,
-                          endIndent: 138,
-                          color: Colors.redAccent
+                      SizedBox(
+                        width: _width / 3,
+                        child: const Divider(
+                            height: 20,
+                            thickness: 2,
+                            color: Colors.redAccent
+                        ),
                       ),
                       const SizedBox(height: 5),
                       SingleChildScrollView(
@@ -275,12 +284,13 @@ class _HomeScreenState extends State<HomeScreen> {
                           fontWeight: FontWeight.w500,
                         ),
                       ),
-                      const Divider(
-                          height: 20,
-                          thickness: 2,
-                          indent: 150,
-                          endIndent: 150,
-                          color: Colors.redAccent
+                      SizedBox(
+                        width: _width / 3.6,
+                        child: const Divider(
+                            height: 20,
+                            thickness: 2,
+                            color: Colors.redAccent
+                        ),
                       ),
                       const SizedBox(height: 5),
                       SingleChildScrollView(
@@ -303,12 +313,13 @@ class _HomeScreenState extends State<HomeScreen> {
                           fontWeight: FontWeight.w500,
                         ),
                       ),
-                      const Divider(
-                          height: 20,
-                          thickness: 2,
-                          indent: 108,
-                          endIndent: 108,
-                          color: Colors.redAccent
+                      SizedBox(
+                        width: _width / 2.1,
+                        child: const Divider(
+                            height: 20,
+                            thickness: 2,
+                            color: Colors.redAccent
+                        ),
                       ),
                       const SizedBox(height: 5),
                       SingleChildScrollView(
@@ -719,7 +730,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget displayFilter(_height, _width, title, icon, iconWidth, iconHeight) {
     return Container(
-      width: _width / 2.4,
       height: 65,
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
@@ -731,7 +741,7 @@ class _HomeScreenState extends State<HomeScreen> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           Image.asset(icon, width: iconWidth, height: iconHeight),
-          const SizedBox(width: 15),
+          const SizedBox(width: 10),
           Text(
             title,
             style: const TextStyle(

@@ -1,5 +1,6 @@
 import 'package:car_app/screens/home_screen.dart';
 import 'package:car_app/screens/login_screen.dart';
+//import 'package:device_preview/device_preview.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -13,6 +14,12 @@ Future<void> main() async {
   if(await checkTimer()) {
     timer = false;
   }
+  /*runApp(
+    DevicePreview(
+      enabled: true,
+      builder: (context) => MyApp(value: timer),
+    ),
+  );*/
   runApp(MyApp(value: timer));
 }
 
