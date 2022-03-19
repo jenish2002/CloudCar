@@ -4,6 +4,7 @@ import 'package:car_app/screens/view_car_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 enum Flag {
   visible,
@@ -11,8 +12,7 @@ enum Flag {
 }
 
 class AdvancedSearch extends StatefulWidget {
-  final String value;
-  const AdvancedSearch(this.value, {Key? key}) : super(key: key);
+  const AdvancedSearch({Key? key}) : super(key: key);
 
   @override
   _AdvancedSearchState createState() => _AdvancedSearchState();
@@ -21,45 +21,31 @@ class AdvancedSearch extends StatefulWidget {
 class _AdvancedSearchState extends State<AdvancedSearch> {
 
   List<String> cars = [];
-  List<String> carBrands = [];
   Map<String,String> carIdWithName = {};
   CarModel carModel = CarModel();
   final ScrollController scrollController = ScrollController();
+  final _formKey = GlobalKey<FormState>();
   final TextEditingController startValueController = TextEditingController();
   final TextEditingController endValueController = TextEditingController();
   bool isVisible = true;
   bool isLoading = true;
-  Flag budget = Flag.invisible;
+  Flag budget = Flag.visible;
   Flag brand = Flag.invisible;
   Flag fuelType = Flag.invisible;
   Flag bodyType = Flag.invisible;
   late double _width;
   double _startValue = 1;
   double _endValue = 100;
-  Map<String,bool> checkedBrand = {};
+  Map<String,bool> checkedBrand = {'Audi' : false, 'BMW' : false, 'Datsun' : false, 'Honda' : false,
+                                   'Hyundai' : false, 'Jeep' : false, 'Kia' : false, 'Mahindra' : false,
+                                   'Maruti Suzuki' : false, 'MG' : false, 'Nissan' : false, 'Renault' : false,
+                                   'Skoda' : false, 'Tata' : false, 'Toyota' : false, 'Volkswagen' : false};
   Map<String,bool> checkedFuel = {'Petrol' : false, 'Diesel' : false, 'CNG' : false};
   Map<String,bool> checkedBody = {'Sedan' : false, 'Hatchback' : false, 'Coupe' : false, 'SUV' : false, 'MUV' : false};
 
   @override
   void initState() {
     super.initState();
-    visibleDisplay();
-    findAllCar();
-  }
-
-  void visibleDisplay() {
-    if(widget.value == "Brand") {
-      brand = Flag.visible;
-    }
-    else if(widget.value == "Fuel Type") {
-      fuelType = Flag.visible;
-    }
-    else if(widget.value == "Budget") {
-      budget = Flag.visible;
-    }
-    else if(widget.value == "Body Type") {
-      bodyType = Flag.visible;
-    }
   }
 
   @override
@@ -190,21 +176,212 @@ class _AdvancedSearchState extends State<AdvancedSearch> {
                               Visibility(
                                 child: Column(
                                   children: <Widget>[
+                                    const SizedBox(height: 20),
+                                    Row(
+                                      children: <Widget>[
+                                        const Expanded(child: SizedBox(),),
+                                        GestureDetector(
+                                          onTap: () {
+                                            setState(() {
+                                              (checkedBrand.values.elementAt(0)) ?
+                                              checkedBrand['Audi'] = false : checkedBrand['Audi'] = true;
+                                            });
+                                          },
+                                          child: brandDisplay("Audi", 'assets/brands/audi.png', checkedBrand['Audi']),
+                                        ),
+                                        const Expanded(child: SizedBox(),),
+                                        GestureDetector(
+                                          onTap: () {
+                                            setState(() {
+                                              (checkedBrand.values.elementAt(1)) ?
+                                              checkedBrand['BMW'] = false : checkedBrand['BMW'] = true;
+                                            });
+                                          },
+                                          child: brandDisplay("BMW", 'assets/brands/bmw.png', checkedBrand['BMW']),
+                                        ),
+                                        const Expanded(child: SizedBox(),),GestureDetector(
+                                          onTap: () {
+                                            setState(() {
+                                              (checkedBrand.values.elementAt(2)) ?
+                                              checkedBrand['Datsun'] = false : checkedBrand['Datsun'] = true;
+                                            });
+                                          },
+                                          child: brandDisplay("Datsun", 'assets/brands/datsun.png', checkedBrand['Datsun']),
+                                        ),
+                                        const Expanded(child: SizedBox(),),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 20),
+                                    Row(
+                                      children: <Widget>[
+                                        const Expanded(child: SizedBox(),),
+                                        GestureDetector(
+                                          onTap: () {
+                                            setState(() {
+                                              (checkedBrand.values.elementAt(3)) ?
+                                              checkedBrand['Honda'] = false : checkedBrand['Honda'] = true;
+                                            });
+                                          },
+                                          child: brandDisplay("Honda", 'assets/brands/honda.png', checkedBrand['Honda']),
+                                        ),
+                                        const Expanded(child: SizedBox(),),
+                                        GestureDetector(
+                                          onTap: () {
+                                            setState(() {
+                                              (checkedBrand.values.elementAt(4)) ?
+                                              checkedBrand['Hyundai'] = false : checkedBrand['Hyundai'] = true;
+                                            });
+                                          },
+                                          child: brandDisplay("Hyundai", 'assets/brands/hyundai.png', checkedBrand['Hyundai']),
+                                        ),
+                                        const Expanded(child: SizedBox(),),
+                                        GestureDetector(
+                                          onTap: () {
+                                            setState(() {
+                                              (checkedBrand.values.elementAt(5)) ?
+                                              checkedBrand['Jeep'] = false : checkedBrand['Jeep'] = true;
+                                            });
+                                          },
+                                          child: brandDisplay("Jeep", 'assets/brands/jeep.png', checkedBrand['Jeep']),
+                                        ),
+                                        const Expanded(child: SizedBox(),),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 20),
+                                    Row(
+                                      children: <Widget>[
+                                        const Expanded(child: SizedBox(),),
+                                        GestureDetector(
+                                          onTap: () {
+                                            setState(() {
+                                              (checkedBrand.values.elementAt(6)) ?
+                                              checkedBrand['Kia'] = false : checkedBrand['Kia'] = true;
+                                            });
+                                          },
+                                          child: brandDisplay("Kia", 'assets/brands/kia.png', checkedBrand['Kia']),
+                                        ),
+                                        const Expanded(child: SizedBox(),),
+                                        GestureDetector(
+                                          onTap: () {
+                                            setState(() {
+                                              (checkedBrand.values.elementAt(7)) ?
+                                              checkedBrand['Mahindra'] = false : checkedBrand['Mahindra'] = true;
+                                            });
+                                          },
+                                          child: brandDisplay("Mahindra", 'assets/brands/mahindra.png', checkedBrand['Mahindra']),
+                                        ),
+                                        const Expanded(child: SizedBox(),),
+                                        GestureDetector(
+                                          onTap: () {
+                                            setState(() {
+                                              (checkedBrand.values.elementAt(8)) ?
+                                              checkedBrand['Maruti Suzuki'] = false : checkedBrand['Maruti Suzuki'] = true;
+                                            });
+                                          },
+                                          child: brandDisplay("Maruti Suzuki", 'assets/brands/MarutiSuzuki.png', checkedBrand['Maruti Suzuki']),
+                                        ),
+                                        const Expanded(child: SizedBox(),),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 20),
+                                    Row(
+                                      children: <Widget>[
+                                        const Expanded(child: SizedBox(),),
+                                        GestureDetector(
+                                          onTap: () {
+                                            setState(() {
+                                              (checkedBrand.values.elementAt(9)) ?
+                                              checkedBrand['MG'] = false : checkedBrand['MG'] = true;
+                                            });
+                                          },
+                                          child: brandDisplay("MG", 'assets/brands/mg.png', checkedBrand['MG']),
+                                        ),
+                                        const Expanded(child: SizedBox(),),
+                                        GestureDetector(
+                                          onTap: () {
+                                            setState(() {
+                                              (checkedBrand.values.elementAt(10)) ?
+                                              checkedBrand['Nissan'] = false : checkedBrand['Nissan'] = true;
+                                            });
+                                          },
+                                          child: brandDisplay("Nissan", 'assets/brands/nissan.png', checkedBrand['Nissan']),
+                                        ),
+                                        const Expanded(child: SizedBox(),),
+                                        GestureDetector(
+                                          onTap: () {
+                                            setState(() {
+                                              (checkedBrand.values.elementAt(11)) ?
+                                              checkedBrand['Renault'] = false : checkedBrand['Renault'] = true;
+                                            });
+                                          },
+                                          child: brandDisplay("Renault", 'assets/brands/renault.png', checkedBrand['Renault']),
+                                        ),
+                                        const Expanded(child: SizedBox(),),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 20),
+                                    Row(
+                                      children: <Widget>[
+                                        const Expanded(child: SizedBox(),),
+                                        GestureDetector(
+                                          onTap: () {
+                                            setState(() {
+                                              (checkedBrand.values.elementAt(12)) ?
+                                              checkedBrand['Skoda'] = false : checkedBrand['Skoda'] = true;
+                                            });
+                                          },
+                                          child: brandDisplay("Skoda", 'assets/brands/skoda.png', checkedBrand['Skoda']),
+                                        ),
+                                        const Expanded(child: SizedBox(),),
+                                        GestureDetector(
+                                          onTap: () {
+                                            setState(() {
+                                              (checkedBrand.values.elementAt(13)) ?
+                                              checkedBrand['Tata'] = false : checkedBrand['Tata'] = true;
+                                            });
+                                          },
+                                          child: brandDisplay("Tata", 'assets/brands/tata.png', checkedBrand['Tata']),
+                                        ),
+                                        const Expanded(child: SizedBox(),),
+                                        GestureDetector(
+                                          onTap: () {
+                                            setState(() {
+                                              (checkedBrand.values.elementAt(14)) ?
+                                              checkedBrand['Toyota'] = false : checkedBrand['Toyota'] = true;
+                                            });
+                                          },
+                                          child: brandDisplay("Toyota", 'assets/brands/toyota.png', checkedBrand['Toyota']),
+                                        ),
+                                        const Expanded(child: SizedBox(),),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 20),
+                                    Row(
+                                      children: <Widget>[
+                                        const Expanded(child: SizedBox(),),
+                                        GestureDetector(
+                                          onTap: () {
+                                            setState(() {
+                                              (checkedBrand.values.elementAt(15)) ?
+                                              checkedBrand['Volkswagen'] = false : checkedBrand['Volkswagen'] = true;
+                                            });
+                                          },
+                                          child: brandDisplay("Volkswagen", 'assets/brands/volkswagen.png', checkedBrand['Volkswagen']),
+                                        ),
+                                        const Expanded(child: SizedBox(),),
+                                        SizedBox(
+                                          width: _width / 3.8,
+                                          height: 70,
+                                        ),
+                                        const Expanded(child: SizedBox(),),
+                                        SizedBox(
+                                          width: _width / 3.8,
+                                          height: 70,
+                                        ),
+                                        const Expanded(child: SizedBox(),),
+                                      ],
+                                    ),
                                     const SizedBox(height: 10),
-                                    for(int i = 0; i < carBrands.length; i+=2)
-                                      Row(
-                                        children: <Widget>[
-                                          SizedBox(
-                                            width: _width/2.3,
-                                            child: displayCheckbox(carBrands[i], checkedBrand.values.elementAt(i), "brand"),
-                                          ),
-                                          ((i + 1) < carBrands.length) ?
-                                          SizedBox(
-                                            width: _width/2.3,
-                                            child: displayCheckbox(carBrands[i+1], checkedBrand.values.elementAt(i+1), "brand"),
-                                          ) : Container(),
-                                        ],
-                                      ),
                                   ],
                                 ),
                               ) : Container(),
@@ -234,21 +411,43 @@ class _AdvancedSearchState extends State<AdvancedSearch> {
                               Visibility(
                                 child: Column(
                                   children: <Widget>[
+                                    const SizedBox(height: 20),
+                                    Row(
+                                      children: <Widget>[
+                                        const Expanded(child: SizedBox(),),
+                                        GestureDetector(
+                                          onTap: () {
+                                            setState(() {
+                                              (checkedFuel.values.elementAt(0)) ?
+                                              checkedFuel['Petrol'] = false : checkedFuel['Petrol'] = true;
+                                            });
+                                          },
+                                          child: bodyTypeDisplay("Petrol", 'assets/fuel/petrol.png', checkedFuel['Petrol']),
+                                        ),
+                                        const Expanded(child: SizedBox(),),
+                                        GestureDetector(
+                                          onTap: () {
+                                            setState(() {
+                                              (checkedFuel.values.elementAt(1)) ?
+                                              checkedFuel['Diesel'] = false : checkedFuel['Diesel'] = true;
+                                            });
+                                          },
+                                          child: bodyTypeDisplay("Diesel", 'assets/fuel/diesel.png', checkedFuel['Diesel']),
+                                        ),
+                                        const Expanded(child: SizedBox(),),
+                                        GestureDetector(
+                                          onTap: () {
+                                            setState(() {
+                                              (checkedFuel.values.elementAt(2)) ?
+                                              checkedFuel['CNG'] = false : checkedFuel['CNG'] = true;
+                                            });
+                                          },
+                                          child: bodyTypeDisplay("CNG", 'assets/fuel/cng.png', checkedFuel['CNG']),
+                                        ),
+                                        const Expanded(child: SizedBox(),),
+                                      ],
+                                    ),
                                     const SizedBox(height: 10),
-                                    for(int i = 0; i < checkedFuel.length; i+=2)
-                                      Row(
-                                        children: <Widget>[
-                                          SizedBox(
-                                            width: _width/2.3,
-                                            child: displayCheckbox(checkedFuel.keys.elementAt(i), checkedFuel.values.elementAt(i), "fuel"),
-                                          ),
-                                          ((i + 1) < checkedFuel.length) ?
-                                          SizedBox(
-                                            width: _width/2.3,
-                                            child: displayCheckbox(checkedFuel.keys.elementAt(i+1), checkedFuel.values.elementAt(i+1), "fuel"),
-                                          ) : Container(),
-                                        ],
-                                      ),
                                   ],
                                 ),
                               ) : Container(),
@@ -304,110 +503,113 @@ class _AdvancedSearchState extends State<AdvancedSearch> {
                                       },
                                     ),
                                     const SizedBox(height: 10),
-                                    SizedBox(
-                                      height: 100,
-                                      child: Row(
-                                        children: <Widget>[
-                                          SizedBox(
-                                            width: _width / 3.3,
-                                            child: TextFormField(
-                                              autofocus: false,
-                                              maxLength: 3,
-                                              controller: startValueController,
-                                              keyboardType: TextInputType.number,
-                                              autovalidateMode: AutovalidateMode.onUserInteraction,
-                                              validator: (value) {
-                                                if(value!.isEmpty || int.parse(value) < 1 || int.parse(value) >= int.parse(endValueController.text)) {
-                                                  return("Invalid amount");
-                                                }
-                                                return null;
-                                              },
-                                              onChanged: (value) {
-                                                if(startValueController.text.isNotEmpty) {
-                                                  var s = double.parse(startValueController.text);
-                                                  setState(() {
-                                                    if(s >= 1 && s < _endValue) {
-                                                      _startValue = double.parse(value.toString()).roundToDouble();
-                                                    }
-                                                    if(s < 1) {
-                                                      _startValue = 1;
-                                                    }
-                                                  });
-                                                }
-                                              },
-                                              //to save value user enters
-                                              onSaved: (value) {
-                                                startValueController.text = value!;
-                                                startValueController.selection = TextSelection.fromPosition(TextPosition(offset: startValueController.text.length));
-                                              },
-                                              decoration: InputDecoration(
-                                                suffixText: "Lakh",
-                                                contentPadding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
-                                                counterText: "",
-                                                errorMaxLines: 2,
-                                                border: OutlineInputBorder(
-                                                  borderRadius: BorderRadius.circular(10),
+                                    Form(
+                                      key: _formKey,
+                                      child: SizedBox(
+                                        height: 100,
+                                        child: Row(
+                                          children: <Widget>[
+                                            SizedBox(
+                                              width: _width / 3.3,
+                                              child: TextFormField(
+                                                autofocus: false,
+                                                maxLength: 3,
+                                                controller: startValueController,
+                                                keyboardType: TextInputType.number,
+                                                autovalidateMode: AutovalidateMode.onUserInteraction,
+                                                validator: (value) {
+                                                  if(value!.isEmpty || endValueController.text.isEmpty || int.parse(value) < 1 || int.parse(value) >= int.parse(endValueController.text)) {
+                                                    return("Invalid amount");
+                                                  }
+                                                  return null;
+                                                },
+                                                onChanged: (value) {
+                                                  if(startValueController.text.isNotEmpty) {
+                                                    var s = double.parse(startValueController.text);
+                                                    setState(() {
+                                                      if(s >= 1 && s < _endValue) {
+                                                        _startValue = double.parse(value.toString()).roundToDouble();
+                                                      }
+                                                      if(s < 1) {
+                                                        _startValue = 1;
+                                                      }
+                                                    });
+                                                  }
+                                                },
+                                                //to save value user enters
+                                                onSaved: (value) {
+                                                  startValueController.text = value!;
+                                                  startValueController.selection = TextSelection.fromPosition(TextPosition(offset: startValueController.text.length));
+                                                },
+                                                decoration: InputDecoration(
+                                                  suffixText: "Lakh",
+                                                  contentPadding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
+                                                  counterText: "",
+                                                  errorMaxLines: 2,
+                                                  border: OutlineInputBorder(
+                                                    borderRadius: BorderRadius.circular(10),
+                                                  ),
                                                 ),
                                               ),
                                             ),
-                                          ),
-                                          Expanded(
-                                            child: Container(
-                                              alignment: Alignment.center,
-                                              child: const Text(
-                                                "to",
-                                                style: TextStyle(
-                                                  color: Colors.black54,
-                                                  fontSize: 19,
-                                                  fontWeight: FontWeight.w400,
+                                            Expanded(
+                                              child: Container(
+                                                alignment: Alignment.center,
+                                                child: const Text(
+                                                  "to",
+                                                  style: TextStyle(
+                                                    color: Colors.black54,
+                                                    fontSize: 19,
+                                                    fontWeight: FontWeight.w400,
+                                                  ),
                                                 ),
                                               ),
                                             ),
-                                          ),
-                                          SizedBox(
-                                            width: _width / 3.3,
-                                            child: TextFormField(
-                                              autofocus: false,
-                                              maxLength: 3,
-                                              controller: endValueController,
-                                              keyboardType: TextInputType.number,
-                                              autovalidateMode: AutovalidateMode.onUserInteraction,
-                                              validator: (value) {
-                                                if(value!.isEmpty || int.parse(value) > 100 || int.parse(value) <= int.parse(startValueController.text)) {
-                                                  return("Invalid amount");
-                                                }
-                                                return null;
-                                              },
-                                              onChanged: (value) {
-                                                if(endValueController.text.isNotEmpty && _startValue < double.parse(endValueController.text)) {
-                                                  var s = double.parse(endValueController.text);
-                                                  setState(() {
-                                                    if(s <= 100 && _startValue < s) {
-                                                      _endValue = double.parse(value.toString()).roundToDouble();
-                                                    }
-                                                    if(s > 100) {
-                                                      _endValue = 100.0;
-                                                    }
-                                                  });
-                                                }
-                                              },
-                                              //to save value user enters
-                                              onSaved: (value) {
-                                                endValueController.text = value!;
-                                                endValueController.selection = TextSelection.fromPosition(TextPosition(offset: endValueController.text.length));
-                                              },
-                                              decoration: InputDecoration(
-                                                suffixText: "Lakh",
-                                                contentPadding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
-                                                counterText: "",
-                                                errorMaxLines: 2,
-                                                border: OutlineInputBorder(
-                                                  borderRadius: BorderRadius.circular(10),
+                                            SizedBox(
+                                              width: _width / 3.3,
+                                              child: TextFormField(
+                                                autofocus: false,
+                                                maxLength: 3,
+                                                controller: endValueController,
+                                                keyboardType: TextInputType.number,
+                                                autovalidateMode: AutovalidateMode.onUserInteraction,
+                                                validator: (value) {
+                                                  if(value!.isEmpty || startValueController.text.isEmpty || int.parse(value) > 100 || int.parse(value) <= int.parse(startValueController.text)) {
+                                                    return("Invalid amount");
+                                                  }
+                                                  return null;
+                                                },
+                                                onChanged: (value) {
+                                                  if(endValueController.text.isNotEmpty && _startValue < double.parse(endValueController.text)) {
+                                                    var s = double.parse(endValueController.text);
+                                                    setState(() {
+                                                      if(s <= 100 && _startValue < s) {
+                                                        _endValue = double.parse(value.toString()).roundToDouble();
+                                                      }
+                                                      if(s > 100) {
+                                                        _endValue = 100.0;
+                                                      }
+                                                    });
+                                                  }
+                                                },
+                                                //to save value user enters
+                                                onSaved: (value) {
+                                                  endValueController.text = value!;
+                                                  endValueController.selection = TextSelection.fromPosition(TextPosition(offset: endValueController.text.length));
+                                                },
+                                                decoration: InputDecoration(
+                                                  suffixText: "Lakh",
+                                                  contentPadding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
+                                                  counterText: "",
+                                                  errorMaxLines: 2,
+                                                  border: OutlineInputBorder(
+                                                    borderRadius: BorderRadius.circular(10),
+                                                  ),
                                                 ),
                                               ),
                                             ),
-                                          ),
-                                        ],
+                                          ],
+                                        ),
                                       ),
                                     ),
                                   ],
@@ -478,10 +680,8 @@ class _AdvancedSearchState extends State<AdvancedSearch> {
                                     ),
                                     const SizedBox(height: 20),
                                     Row(
-                                      //mainAxisAlignment: MainAxisAlignment.center,
                                       children: <Widget>[
                                         const Expanded(child: SizedBox(),),
-                                        //const SizedBox(width: 10),
                                         GestureDetector(
                                           onTap: () {
                                             setState(() {
@@ -516,32 +716,46 @@ class _AdvancedSearchState extends State<AdvancedSearch> {
                             ],
                           ),
                         ),
-                        const SizedBox(height: 20),
-                        Material(
-                          elevation: 5,
-                          borderRadius: BorderRadius.circular(25),
-                          color: Colors.redAccent,
-                          child: MaterialButton(
-                            padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
-                            minWidth: _width / 1.3,
-                            onPressed: () async {
-                              if(isVisible) {
-                                isVisible = false;
-                                await initiateSearch();
-                                setState(() {
-                                  scrollController.jumpTo(0);
-                                });
-                              }
-                            },
-                            child: const Text("Apply", textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  fontSize: 20,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold
+                        const SizedBox(height: 10),
+                        Padding(
+                          padding: const EdgeInsets.all(20),
+                          child: Row(
+                            children: <Widget>[
+                              Expanded(
+                                child: Material(
+                                  elevation: 5,
+                                  borderRadius: BorderRadius.circular(25),
+                                  color: Colors.redAccent,
+                                  child: MaterialButton(
+                                    padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
+                                    onPressed: () async {
+                                      if(isVisible) {
+                                        if(_formKey.currentState!.validate()) {
+                                          isVisible = false;
+                                          await initiateSearch();
+                                          setState(() {
+                                            scrollController.jumpTo(0);
+                                          });
+                                        }
+                                        else {
+                                          Fluttertoast.showToast(msg: "Check budget");
+                                        }
+                                      }
+                                    },
+                                    child: const Text("Apply", textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                          fontSize: 20,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold
+                                      ),
+                                    ),
+                                  ),
+                                ),
                               ),
-                            ),
+                            ],
                           ),
                         ),
+                        const SizedBox(height: 15),
                       ],
                     ),
                   ),
@@ -588,20 +802,6 @@ class _AdvancedSearchState extends State<AdvancedSearch> {
         }
       }
     }
-  }
-
-  findAllCar() async {
-    setState(() {});
-    await FirebaseFirestore.instance.collection("cars").get().then((val) {
-      for(int i = 0; i < val.docs.length; i++) {
-        carModel =  CarModel.fromJson(val.docs[i].data());
-        if(!carBrands.any((element) => element.compareTo(carModel.brand!) == 0)) {
-          carBrands.add(carModel.brand!);
-          checkedBrand[carModel.brand!] = false;
-        }
-      }
-    });
-    setState(() {});
   }
 
   initiateSearch() async {
@@ -652,6 +852,25 @@ class _AdvancedSearchState extends State<AdvancedSearch> {
     setState(() {
       isLoading = false;
     });
+  }
+
+  Widget brandDisplay(title, imageURL, checkedValue) {
+    return Column(
+      children: <Widget>[
+        SizedBox(
+          width: _width / 4,
+          height: 60,
+          child: Image.asset(imageURL),
+        ),
+        const SizedBox(height: 10),
+        Text(
+          title,
+          style: TextStyle(
+            color: (checkedValue) ? Colors.redAccent : Colors.black,
+          ),
+        ),
+      ],
+    );
   }
 
   Widget bodyTypeDisplay(title, imageURL, checkedValue) {

@@ -73,18 +73,15 @@ class _CompareCarScreenState extends State<CompareCarScreen>{
     setState(() {
       isLoading = true;
     });
-    await FirebaseFirestore.instance.collection("cars").doc(name)
-        .get().then((val) async {
+    print(name);
+    print(FirebaseFirestore.instance.collection("cars").doc(name));
+    await FirebaseFirestore.instance.collection("cars").doc(name).get().then((val) async {
       carModel = CarModel.fromJson(val.data() as Map<String, dynamic>);
+      print(carModel.name);
       setState(() {
         isLoading = false;
       });
     });
-  }
-
-  @override
-  void initState() {
-    super.initState();
   }
 
   @override
@@ -159,7 +156,7 @@ class _CompareCarScreenState extends State<CompareCarScreen>{
               child: Column(
                 children: <Widget>[
                   Padding(
-                    padding: (isVisible) ? const EdgeInsets.only(left: 20, top: 10, right: 20, bottom: 5) :
+                    padding: (isVisible) ? const EdgeInsets.only(left: 30, top: 10, right: 30, bottom: 10) :
                       EdgeInsets.zero,
                     child: (isVisible) ? Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -167,6 +164,8 @@ class _CompareCarScreenState extends State<CompareCarScreen>{
                       children: <Widget>[
                         const SizedBox(height: 20),
                         Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: <Widget>[
                             Expanded(
                               child: GestureDetector(
@@ -191,6 +190,8 @@ class _CompareCarScreenState extends State<CompareCarScreen>{
                         ),
                         const SizedBox(height: 25),
                         Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: <Widget>[
                             Expanded(
                               child: GestureDetector(
@@ -257,7 +258,7 @@ class _CompareCarScreenState extends State<CompareCarScreen>{
 
   Widget selectCarDesign(_height, _width, car_name) {
     return Container(
-      //width: _width - 40,
+      height: 70,
       decoration: BoxDecoration(
         border: Border.all(
           color: Colors.redAccent,
@@ -265,25 +266,35 @@ class _CompareCarScreenState extends State<CompareCarScreen>{
         ),
         borderRadius: const BorderRadius.all(Radius.circular(20))
       ),
-      child: Column(
+      child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          const Icon(
-            Icons.directions_car_filled_rounded,
-            color: Colors.black54,
-            size: 75,
-          ),
-          const SizedBox(height: 15),
-          Text(
-            (car_name != null) ? car_name : "Select Car",
-            style: const TextStyle(
+          const SizedBox(width: 15),
+          Image.asset('assets/body_type.png', width: 40.0, height: 40.0),
+          const SizedBox(width: 20),
+          (car_name == null) ?
+          const Text(
+            "Select Car",
+            style: TextStyle(
+              overflow: TextOverflow.ellipsis,
               color: Colors.black,
               fontSize: 21,
               fontWeight: FontWeight.w500,
             ),
+          ) :
+          Expanded(
+            child: Text(
+              car_name,
+              style: const TextStyle(
+                overflow: TextOverflow.ellipsis,
+                color: Colors.black,
+                fontSize: 21,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
           ),
-          const SizedBox(height: 10),
+          const SizedBox(width: 15),
         ],
       ),
     );

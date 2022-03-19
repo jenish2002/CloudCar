@@ -165,7 +165,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               GestureDetector(
                                 onTap: () {
                                   Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) => const AdvancedSearch("Fuel Type"))
+                                      builder: (context) => const AdvancedSearch())
                                   );
                                   FocusScope.of(context).unfocus();
                                 },
