@@ -2,9 +2,11 @@
 
 Cloud Car application will be used to explore cars. It provides features like compare two cars, search cars by different ways, safest cars, trending cars, upcoming launches, etc.
 
-### How to Use
+## How to Use
 
-**Step 1:** Install Android Studio from following link:
+## Step 1
+
+Install Android Studio from following link: https://developer.android.com/studio/install
 
 This project is a starting point for a Flutter application.
 
