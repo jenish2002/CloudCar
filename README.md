@@ -4,9 +4,11 @@ Cloud Car application will be used to explore cars. It provides features like co
 
 ## How to Use
 
-### Step 1
+### Step 1: Set up Android Studio with FLutter
 
-Install Android Studio from following link: https://developer.android.com/studio/install
+- Install Android Studio from following link: https://developer.android.com/studio/install
+
+- Install Flutter from following link: https://docs.flutter.dev/get-started/install
 
 This project is a starting point for a Flutter application.
 
