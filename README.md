@@ -4,7 +4,7 @@ Cloud Car application will be used to explore cars. It provides features like co
 
 ## How to Use
 
-## Step 1
+### Step 1
 
 Install Android Studio from following link: https://developer.android.com/studio/install
 
