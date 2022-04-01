@@ -19,10 +19,10 @@ Cloud Car application will be used to explore cars. It provides features like co
 
 - Select Directory to save Project and Click Clone.
 
-![image](https://user-images.githubusercontent.com/60685502/161109494-6ccd9b74-6b49-40e3-a94f-27aa1522b248.png)
+<img src="https://user-images.githubusercontent.com/60685502/161109494-6ccd9b74-6b49-40e3-a94f-27aa1522b248.png" height="70%" width="70%" title="Loading Image...">
 
 
-### Step 3: Get Dependencies and Select Project SDK.
+### Step 3: Get Dependencies and Select Project SDK
 
 - Open Tools > Flutter > Flutter Pub Get from Toolbar.
 
@@ -30,4 +30,9 @@ Cloud Car application will be used to explore cars. It provides features like co
 
 - Select Android SDK in Project SDK and Click OK.
 
-![image](https://user-images.githubusercontent.com/60685502/161112349-7a43953f-92f3-4d1f-9440-8e8f06db3ce8.png)
+<img src="https://user-images.githubusercontent.com/60685502/161112349-7a43953f-92f3-4d1f-9440-8e8f06db3ce8.png" height="85%" width="85%" title="Loading Image...">
+
+
+### Step 4: Run Project
+
+- To Run project follow steps from following link: https://developer.android.com/training/basics/firstapp/running-app
