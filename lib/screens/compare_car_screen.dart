@@ -73,11 +73,8 @@ class _CompareCarScreenState extends State<CompareCarScreen>{
     setState(() {
       isLoading = true;
     });
-    print(name);
-    print(FirebaseFirestore.instance.collection("cars").doc(name));
     await FirebaseFirestore.instance.collection("cars").doc(name).get().then((val) async {
       carModel = CarModel.fromJson(val.data() as Map<String, dynamic>);
-      print(carModel.name);
       setState(() {
         isLoading = false;
       });
