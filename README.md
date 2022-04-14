@@ -2,7 +2,7 @@
 
 Cloud Car application will be used to explore cars. It provides features like compare two cars, search cars by different ways, safest cars, trending cars, upcoming launches, etc.
 
-## How to Use
+## How to Install App
 
 Install Cloud Car application from following link: https://drive.google.com/file/d/1khenpzYdHroAcEZt7_WflS2UPaOKURx6/view?usp=sharing
 
