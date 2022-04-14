@@ -4,6 +4,10 @@ Cloud Car application will be used to explore cars. It provides features like co
 
 ## How to Use
 
+Install Cloud Car application from following link: https://drive.google.com/file/d/1khenpzYdHroAcEZt7_WflS2UPaOKURx6/view?usp=sharing
+
+## How to Use
+
 ### Step 1 : Set up Android Studio with Flutter
 
 - Install Android Studio from following link: https://developer.android.com/studio/install
